@@ -1,0 +1,40 @@
+.app {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Loading variant indicator - dev only */
+.loading-variant-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(92, 74, 50, 0.9);
+  color: var(--cream);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  z-index: 10000;
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Section spacing overrides */
+main > section:first-child {
+  padding-top: 0;
+}
+
+/* Smooth reveal for main content after loading */
+main {
+  animation: mainReveal 0.8s var(--ease-smooth) forwards;
+}
+
+@keyframes mainReveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,10 @@
+.blog__header { margin-bottom: var(--space-2xl); }
+.blog__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); }
+.blog__card { padding: 0; overflow: hidden; cursor: pointer; }
+.blog__card-accent { height: 6px; width: 100%; }
+.blog__card-category { display: inline-block; font-size: var(--text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: var(--space-md) var(--space-lg) 0; }
+.blog__card-title { font-size: var(--text-lg); padding: var(--space-sm) var(--space-lg); line-height: 1.4; }
+.blog__card-excerpt { font-size: var(--text-sm); color: var(--earth-brown); padding: 0 var(--space-lg); line-height: 1.7; }
+.blog__card-meta { display: flex; gap: var(--space-sm); font-size: var(--text-xs); color: var(--tan); padding: var(--space-md) var(--space-lg) var(--space-lg); }
+.blog__more { margin-top: var(--space-2xl); }
+@media (max-width: 900px) { .blog__grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; } }

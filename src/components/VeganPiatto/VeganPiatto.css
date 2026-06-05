@@ -1,0 +1,277 @@
+/* ========================================
+   VEGAN PIATTO SECTION
+   ======================================== */
+
+.vp {
+  background: linear-gradient(180deg, var(--cream) 0%, var(--warm-beige) 100%);
+  position: relative;
+  padding-bottom: calc(var(--space-section) + 60px);
+}
+
+/* --- Decorative floating leaves --- */
+.vp__leaf {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.15;
+  animation: floatSlow 14s ease-in-out infinite;
+}
+
+.vp__offer-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.vp__leaf--1 {
+  top: 6%;
+  left: 4%;
+  transform: rotate(-20deg);
+  animation-delay: -2s;
+}
+
+.vp__leaf--2 {
+  bottom: 18%;
+  right: 6%;
+  transform: rotate(15deg);
+  animation-delay: -8s;
+}
+
+/* --- Header --- */
+.vp__header {
+  margin-bottom: var(--space-3xl);
+  position: relative;
+  z-index: 2;
+}
+
+.vp__label {
+  display: inline-block;
+  margin-bottom: var(--space-md);
+  color: var(--olive-green);
+}
+
+.vp__title {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 2.2rem + 4vw, 6rem);
+  font-weight: 700;
+  color: var(--dark-brown);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+/* --- Body: paragraphs + image side-by-side --- */
+.vp__body {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--space-2xl);
+  align-items: start;
+  margin-bottom: var(--space-3xl);
+  position: relative;
+  z-index: 2;
+}
+
+.vp__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vp__paragraph {
+  font-size: var(--text-lg);
+  color: var(--earth-brown);
+  line-height: 1.8;
+  margin-bottom: var(--space-md);
+}
+
+.vp__paragraph:last-child {
+  margin-bottom: 0;
+  font-weight: 700;
+  color: var(--dark-brown);
+}
+
+/* --- Image side --- */
+.vp__image-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.vp__image-wrapper {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    0 16px 60px rgba(92, 74, 50, 0.15),
+    0 0 0 6px rgba(163, 184, 153, 0.2),
+    0 0 0 12px rgba(163, 184, 153, 0.08);
+  position: relative;
+}
+
+.vp__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- Highlight quote --- */
+.vp__highlight {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto var(--space-3xl);
+  padding: var(--space-xl) var(--space-2xl);
+  z-index: 2;
+}
+
+.vp__highlight-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--leaf-green), var(--sage));
+  border-radius: 2px;
+  transform-origin: top center;
+}
+
+.vp__highlight-text {
+  font-family: var(--font-handwritten);
+  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem);
+  color: var(--olive-green);
+  line-height: 1.5;
+  font-weight: 500;
+  font-style: italic;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Offers section --- */
+.vp__offers {
+  position: relative;
+  z-index: 2;
+}
+
+.vp__offers-heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  color: var(--dark-brown);
+  margin-bottom: var(--space-xl);
+}
+
+.vp__offers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.vp__offer-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(163, 184, 153, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  transition: all var(--transition-base);
+}
+
+.vp__offer-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(122, 158, 109, 0.35);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.vp__offer-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(122, 158, 109, 0.12);
+  border-radius: var(--radius-sm);
+  color: var(--leaf-green);
+}
+
+.vp__offer-text {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--dark-brown);
+  line-height: 1.4;
+}
+
+/* --- Wave at bottom --- */
+.vp .section-wave--bottom {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  z-index: 3;
+  line-height: 0;
+}
+
+.vp .section-wave--bottom svg {
+  width: 100%;
+  height: 70px;
+  display: block;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 900px) {
+  .vp__body {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .vp__image-side {
+    order: -1;
+  }
+
+  .vp__image-wrapper {
+    max-width: 260px;
+  }
+
+  .vp__offers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vp__highlight {
+    padding: var(--space-lg) var(--space-xl);
+  }
+}
+
+@media (max-width: 640px) {
+  .vp__title {
+    font-size: clamp(2.2rem, 1.8rem + 3vw, 3.5rem);
+  }
+
+  .vp__offers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vp__image-wrapper {
+    max-width: 220px;
+  }
+
+  .vp__highlight {
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .vp__highlight-text {
+    font-size: clamp(1.3rem, 1rem + 1.2vw, 1.8rem);
+  }
+
+  .vp__offer-card {
+    padding: var(--space-sm) var(--space-md);
+  }
+}

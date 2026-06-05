@@ -1,0 +1,90 @@
+/* Custom cursor - hide default on desktop */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .has-custom-cursor,
+  .has-custom-cursor * {
+    cursor: auto !important;
+  }
+}
+
+.custom-cursor-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+  mix-blend-mode: normal;
+}
+
+.custom-cursor__ring {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--olive-green);
+  border-radius: 50%;
+  opacity: 0.4;
+  transition: width 0.3s var(--ease-bounce),
+              height 0.3s var(--ease-bounce),
+              top 0.3s var(--ease-bounce),
+              left 0.3s var(--ease-bounce),
+              opacity 0.3s ease,
+              border-color 0.3s ease;
+}
+
+.custom-cursor__paw {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  transition: transform 0.2s var(--ease-bounce),
+              opacity 0.2s ease;
+}
+
+/* Hover state */
+.custom-cursor-wrapper--hover .custom-cursor__ring {
+  width: 60px;
+  height: 60px;
+  top: -30px;
+  left: -30px;
+  border-color: var(--leaf-green);
+  opacity: 0.6;
+  border-width: 2px;
+}
+
+.custom-cursor-wrapper--hover .custom-cursor__paw {
+  transform: scale(1.3) rotate(10deg);
+}
+
+/* Click state */
+.custom-cursor-wrapper--click .custom-cursor__ring {
+  width: 30px;
+  height: 30px;
+  top: -15px;
+  left: -15px;
+  opacity: 0.8;
+  border-color: var(--earth-brown);
+}
+
+.custom-cursor-wrapper--click .custom-cursor__paw {
+  transform: scale(0.8);
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+  .custom-cursor-wrapper {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-cursor__ring,
+  .custom-cursor__paw {
+    transition: none;
+  }
+}

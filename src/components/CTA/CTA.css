@@ -1,0 +1,5 @@
+.cta { background: var(--gradient-warm); position: relative; overflow: hidden; }
+.cta__title { font-size: var(--text-4xl); max-width: 600px; margin: 0 auto var(--space-md); }
+.cta__subtitle { max-width: 550px; margin: 0 auto var(--space-xl); color: var(--earth-brown); line-height: 1.8; }
+.cta__buttons { display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap; }
+.cta__float { position: absolute; opacity: 0.15; animation: float 5s ease-in-out infinite; pointer-events: none; }

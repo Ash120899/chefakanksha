@@ -1,0 +1,22 @@
+.philosophy { position: relative; overflow: hidden; }
+.philosophy__container { display: grid; grid-template-columns: 0.45fr 0.55fr; gap: var(--space-2xl); align-items: center; position: relative; z-index: 2; }
+.philosophy__image { position: relative; }
+.philosophy__image-frame { aspect-ratio: 4/5; border-radius: 30% 70% 60% 40% / 50% 40% 60% 50%; overflow: hidden; box-shadow: 0 20px 60px rgba(92,74,50,0.15); will-change: clip-path; }
+.philosophy__image-inner { width: 100%; height: 120%; will-change: transform; }
+.philosophy__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.philosophy__image-deco { position: absolute; top: -10px; right: -10px; animation: floatSlow 5s ease-in-out infinite; opacity: 0.6; }
+.philosophy__label { margin-bottom: var(--space-sm); }
+.philosophy__title { margin-bottom: var(--space-md); will-change: transform, clip-path; }
+.philosophy__text { margin-bottom: var(--space-lg); max-width: 500px; line-height: 1.9; }
+.philosophy__cta { font-weight: 700; color: var(--olive-green); font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.1em; display: inline-block; border-bottom: 2px solid var(--olive-green); padding-bottom: 2px; transition: all var(--transition-base); }
+.philosophy__cta:hover { color: var(--leaf-green); border-color: var(--leaf-green); }
+.philosophy__quote { font-size: var(--text-3xl); color: var(--tan); pointer-events: none; margin-top: var(--space-xl); }
+.philosophy__paws { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+
+/* Organic wave dividers */
+.section-wave { position: absolute; left: 0; right: 0; z-index: 3; line-height: 0; }
+.section-wave--bottom { bottom: -2px; }
+.section-wave--top { top: -2px; }
+.section-wave svg { width: 100%; height: 70px; display: block; }
+
+@media (max-width: 900px) { .philosophy__container { grid-template-columns: 1fr; text-align: center; } .philosophy__text { max-width: none; } .philosophy__quote { margin-top: var(--space-md); } }

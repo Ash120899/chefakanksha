@@ -1,0 +1,273 @@
+/* ========================================
+   JOURNEY SECTION — Styles
+   ======================================== */
+
+.journey {
+  position: relative;
+  background: var(--cream);
+  padding-top: var(--space-section);
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+/* --- Grain overlay --- */
+.journey .grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* --- Container --- */
+.journey__container {
+  position: relative;
+  z-index: 2;
+}
+
+/* --- Header --- */
+.journey__header {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.journey__label {
+  display: inline-block;
+  margin-bottom: var(--space-md);
+}
+
+.journey__title {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--dark-brown);
+}
+
+.journey__title-line {
+  display: block;
+}
+
+.journey__title-line--accent {
+  color: var(--olive-green);
+  font-style: italic;
+}
+
+/* --- Body layout: text + side image --- */
+.journey__body {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+/* --- Text column --- */
+.journey__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-bottom: 60px;
+}
+
+.journey__paragraph {
+  font-size: var(--text-lg);
+  line-height: 1.85;
+  color: var(--earth-brown);
+  margin-bottom: 0;
+}
+
+/* Emphasis paragraphs */
+.journey__paragraph--emphasis {
+  font-weight: 700;
+  font-size: var(--text-xl);
+  color: var(--dark-brown);
+  position: relative;
+  padding-left: var(--space-lg);
+  border-left: 3px solid var(--leaf-green);
+}
+
+/* --- Quote block --- */
+.journey__quote {
+  position: relative;
+  background: linear-gradient(135deg,
+      rgba(163, 184, 153, 0.1) 0%,
+      rgba(122, 158, 109, 0.08) 100%);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-xl) var(--space-xl) var(--space-2xl);
+  margin: var(--space-md) 0;
+  border-left: 4px solid var(--olive-green);
+  overflow: hidden;
+}
+
+.journey__quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  font-family: var(--font-heading);
+  font-size: 6rem;
+  color: var(--olive-green);
+  opacity: 0.15;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.journey__quote-text {
+  font-family: var(--font-handwritten);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--dark-brown);
+  line-height: 1.5;
+  margin-bottom: 0;
+  font-style: italic;
+}
+
+/* --- Side image --- */
+.journey__aside {
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-lg));
+}
+
+.journey__image-wrapper {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.journey__image-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+      transparent 60%,
+      rgba(92, 74, 50, 0.15) 100%);
+  pointer-events: none;
+}
+
+.journey__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+/* --- Paw print decorations --- */
+.journey__paw {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+}
+
+.journey__paw--1 {
+  top: 10%;
+  right: 6%;
+  transform: rotate(20deg);
+}
+
+.journey__paw--2 {
+  top: 35%;
+  left: 3%;
+  transform: rotate(-10deg);
+}
+
+.journey__paw--3 {
+  bottom: 25%;
+  right: 10%;
+  transform: rotate(35deg);
+}
+
+.journey__paw--4 {
+  bottom: 12%;
+  left: 8%;
+  transform: rotate(-25deg);
+}
+
+/* --- Wave divider --- */
+.journey__wave-divider {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  z-index: 4;
+  line-height: 0;
+}
+
+.journey__wave-divider svg {
+  width: 100%;
+  height: 70px;
+  display: block;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+  .journey__body {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .journey__aside {
+    position: relative;
+    top: 0;
+    order: -1;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .journey__title {
+    font-size: var(--text-3xl);
+  }
+
+  .journey__paragraph {
+    font-size: var(--text-base);
+  }
+
+  .journey__paragraph--emphasis {
+    font-size: var(--text-lg);
+    padding-left: var(--space-md);
+  }
+
+  .journey__quote {
+    padding: var(--space-lg) var(--space-lg) var(--space-lg) var(--space-xl);
+  }
+
+  .journey__quote-text {
+    font-size: var(--text-xl);
+  }
+
+  .journey__paw--2,
+  .journey__paw--4 {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .journey__header {
+    text-align: left;
+  }
+
+  .journey__title {
+    text-align: left;
+  }
+
+  .journey__quote::before {
+    font-size: 4rem;
+    top: -5px;
+    left: 10px;
+  }
+
+  .journey__wave-divider svg {
+    height: 45px;
+  }
+}

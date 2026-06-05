@@ -1,0 +1,116 @@
+.fp {
+  position: relative;
+  overflow: hidden;
+}
+
+.fp__header-bar {
+  padding: var(--space-xl) var(--space-lg) var(--space-md);
+  text-align: center;
+}
+
+.fp__title {
+  font-size: var(--text-3xl);
+}
+
+.fp__scroll {
+  display: flex;
+  will-change: transform;
+}
+
+.fp__card {
+  min-width: 80vw;
+  max-width: 80vw;
+  height: calc(100vh - 180px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-2xl);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.fp__card--cream { background: var(--cream); }
+.fp__card--beige { background: var(--warm-beige); }
+
+.fp__card-number {
+  font-family: var(--font-heading);
+  font-size: 8rem;
+  font-weight: 700;
+  color: var(--tan);
+  opacity: 0.15;
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  line-height: 1;
+}
+
+.fp__card-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(107, 127, 94, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-lg);
+  color: var(--olive-green);
+}
+
+.fp__card-title {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-md);
+  max-width: 400px;
+}
+
+.fp__card-desc {
+  font-size: var(--text-base);
+  max-width: 500px;
+  line-height: 1.8;
+  color: var(--earth-brown);
+}
+
+.fp__progress {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  z-index: 10;
+}
+
+.fp__progress-track {
+  width: 120px;
+  height: 3px;
+  background: var(--tan);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.fp__progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--olive-green);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.fp__progress-text {
+  font-size: var(--text-xs);
+  color: var(--earth-brown);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 640px) {
+  .fp__card {
+    min-width: 90vw;
+    max-width: 90vw;
+    padding: var(--space-lg);
+    height: calc(100vh - 160px);
+  }
+  .fp__card-number { font-size: 5rem; }
+}

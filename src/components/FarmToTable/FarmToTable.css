@@ -1,0 +1,12 @@
+.ftable { position: relative; overflow: hidden; }
+.ftable__container { display: grid; grid-template-columns: 0.5fr 0.5fr; gap: var(--space-2xl); align-items: center; position: relative; z-index: 2; }
+.ftable__title { margin-bottom: var(--space-md); }
+.ftable__text { max-width: 500px; line-height: 1.9; margin-bottom: var(--space-lg); }
+.ftable__cta { font-weight: 700; color: var(--olive-green); font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 2px solid var(--olive-green); padding-bottom: 2px; transition: all var(--transition-base); }
+.ftable__cta:hover { color: var(--leaf-green); }
+.ftable__visual { position: relative; }
+.ftable__image-frame { border-radius: 60% 40% 45% 55% / 45% 55% 40% 60%; overflow: hidden; aspect-ratio: 4/5; box-shadow: 0 20px 60px rgba(92,74,50,0.12); will-change: clip-path; }
+.ftable__image-inner { width: 100%; height: 120%; will-change: transform; }
+.ftable__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ftable__divider { text-align: center; margin-top: var(--space-2xl); opacity: 0.4; position: relative; z-index: 2; }
+@media (max-width: 900px) { .ftable__container { grid-template-columns: 1fr; text-align: center; } .ftable__text { max-width: none; } .ftable__visual { order: -1; } }

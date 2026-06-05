@@ -1,0 +1,13 @@
+.wv__header { margin-bottom: var(--space-2xl); }
+.wv__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); }
+.wv__card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-lg); padding: var(--space-lg); text-align: center; transition: all var(--transition-base); backdrop-filter: blur(4px); }
+.wv__card:hover { background: rgba(255,255,255,0.1); transform: translateY(-6px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+.wv__card-icon { width: 56px; height: 56px; border-radius: 50%; background: rgba(163,184,153,0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-md); color: var(--sage); transition: all var(--transition-base); }
+.wv__card:hover .wv__card-icon { transform: scale(1.15); background: rgba(163,184,153,0.25); }
+.wv__card-title { font-size: var(--text-lg); margin-bottom: var(--space-sm); color: var(--cream); }
+.wv__card-desc { font-size: var(--text-sm); color: var(--tan); line-height: 1.7; margin-bottom: var(--space-lg); }
+.wv__card-stat { border-top: 1px solid rgba(255,255,255,0.08); padding-top: var(--space-md); }
+.wv__card-stat-number { font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 700; color: var(--sage); display: block; }
+.wv__card-stat-label { font-size: var(--text-xs); color: var(--tan); text-transform: uppercase; letter-spacing: 0.05em; }
+@media (max-width: 1200px) { .wv__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .wv__grid { grid-template-columns: 1fr; } }
