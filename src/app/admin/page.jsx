@@ -10,34 +10,58 @@ export default function AdminDashboard() {
   const router = useRouter();
   const [blogs, setBlogs] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('blogs'); // blogs, messages, edit-blog
-  
+  const [activeTab, setActiveTab] = useState('blogs'); // blogs, edit-blog, testimonials, edit-testimonial, milestones, edit-milestone, messages
+
   // Blog form states
   const [blogForm, setBlogForm] = useState({ id: '', title: '', excerpt: '', content: '', image: '', category: 'My Journey' });
   const [blogLoading, setBlogLoading] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [formSuccess, setFormSuccess] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
-  // Fetch blogs & contact messages
+  // Testimonial form states
+  const [testimonialForm, setTestimonialForm] = useState({ id: '', rating: 5, text: '', avatar: '🌿', author: '', role: '' });
+  const [testimonialLoading, setTestimonialLoading] = useState(false);
+  const [isEditingTestimonial, setIsEditingTestimonial] = useState(false);
+
+  // Milestone form states
+  const [milestoneForm, setMilestoneForm] = useState({ id: '', org: '', title: '', description: '', type: 'training' });
+  const [milestoneLoading, setMilestoneLoading] = useState(false);
+  const [isEditingMilestone, setIsEditingMilestone] = useState(false);
+
+  const [formError, setFormError] = useState('');
+  const [formSuccess, setFormSuccess] = useState('');
+
+  // Fetch all CMS data
   const fetchData = async () => {
     try {
-      const [blogsRes, messagesRes] = await Promise.all([
+      const [blogsRes, messagesRes, testimonialsRes, milestonesRes] = await Promise.all([
         fetch('/api/blogs'),
-        fetch('/api/contact')
+        fetch('/api/contact'),
+        fetch('/api/testimonials'),
+        fetch('/api/milestones')
       ]);
 
-      if (blogsRes.status === 401 || messagesRes.status === 401) {
+      if (
+        blogsRes.status === 401 ||
+        messagesRes.status === 401 ||
+        testimonialsRes.status === 401 ||
+        milestonesRes.status === 401
+      ) {
         router.push('/login-now');
         return;
       }
 
-      const blogsData = await blogsRes.status === 200 ? await blogsRes.json() : { blogs: [] };
-      const messagesData = await messagesRes.status === 200 ? await messagesRes.json() : { messages: [] };
+      const blogsData = blogsRes.status === 200 ? await blogsRes.json() : { blogs: [] };
+      const messagesData = messagesRes.status === 200 ? await messagesRes.json() : { messages: [] };
+      const testimonialsData = testimonialsRes.status === 200 ? await testimonialsRes.json() : { testimonials: [] };
+      const milestonesData = milestonesRes.status === 200 ? await milestonesRes.json() : { milestones: [] };
 
       setBlogs(blogsData.blogs || []);
       setMessages(messagesData.messages || []);
+      setTestimonials(testimonialsData.testimonials || []);
+      setMilestones(milestonesData.milestones || []);
     } catch (err) {
       console.error('Error fetching CMS data:', err);
     } finally {
@@ -58,6 +82,9 @@ export default function AdminDashboard() {
     }
   };
 
+  // -------------------------
+  // BLOG POST HANDLERS
+  // -------------------------
   const handleBlogSubmit = async (e) => {
     e.preventDefault();
     setBlogLoading(true);
@@ -114,15 +141,140 @@ export default function AdminDashboard() {
     }
   };
 
+  // -------------------------
+  // TESTIMONIAL HANDLERS
+  // -------------------------
+  const handleTestimonialSubmit = async (e) => {
+    e.preventDefault();
+    setTestimonialLoading(true);
+    setFormError('');
+    setFormSuccess('');
+
+    const endpoint = isEditingTestimonial ? `/api/testimonials/${testimonialForm.id}` : '/api/testimonials';
+    const method = isEditingTestimonial ? 'PUT' : 'POST';
+
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testimonialForm),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setFormSuccess(isEditingTestimonial ? 'Testimonial updated successfully!' : 'Testimonial created successfully!');
+        resetForm();
+        fetchData();
+        setActiveTab('testimonials');
+      } else {
+        setFormError(data.error || 'Failed to submit testimonial');
+      }
+    } catch (err) {
+      console.error(err);
+      setFormError('Network error. Please try again.');
+    } finally {
+      setTestimonialLoading(false);
+    }
+  };
+
+  const startEditTestimonial = (testimonial) => {
+    setTestimonialForm(testimonial);
+    setIsEditingTestimonial(true);
+    setActiveTab('edit-testimonial');
+  };
+
+  const handleTestimonialDelete = async (id) => {
+    if (!confirm('Are you sure you want to delete this testimonial?')) return;
+
+    try {
+      const res = await fetch(`/api/testimonials/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        fetchData();
+      } else {
+        alert(data.error || 'Failed to delete testimonial');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error deleting testimonial');
+    }
+  };
+
+  // -------------------------
+  // MILESTONE HANDLERS
+  // -------------------------
+  const handleMilestoneSubmit = async (e) => {
+    e.preventDefault();
+    setMilestoneLoading(true);
+    setFormError('');
+    setFormSuccess('');
+
+    const endpoint = isEditingMilestone ? `/api/milestones/${milestoneForm.id}` : '/api/milestones';
+    const method = isEditingMilestone ? 'PUT' : 'POST';
+
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(milestoneForm),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setFormSuccess(isEditingMilestone ? 'Milestone updated successfully!' : 'Milestone created successfully!');
+        resetForm();
+        fetchData();
+        setActiveTab('milestones');
+      } else {
+        setFormError(data.error || 'Failed to submit milestone');
+      }
+    } catch (err) {
+      console.error(err);
+      setFormError('Network error. Please try again.');
+    } finally {
+      setMilestoneLoading(false);
+    }
+  };
+
+  const startEditMilestone = (milestone) => {
+    setMilestoneForm(milestone);
+    setIsEditingMilestone(true);
+    setActiveTab('edit-milestone');
+  };
+
+  const handleMilestoneDelete = async (id) => {
+    if (!confirm('Are you sure you want to delete this milestone?')) return;
+
+    try {
+      const res = await fetch(`/api/milestones/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        fetchData();
+      } else {
+        alert(data.error || 'Failed to delete milestone');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Network error deleting milestone');
+    }
+  };
+
+  // -------------------------
+  // COMMON HELPERS
+  // -------------------------
   const resetForm = () => {
     setBlogForm({ id: '', title: '', excerpt: '', content: '', image: '', category: 'My Journey' });
+    setTestimonialForm({ id: '', rating: 5, text: '', avatar: '🌿', author: '', role: '' });
+    setMilestoneForm({ id: '', org: '', title: '', description: '', type: 'training' });
     setIsEditing(false);
+    setIsEditingTestimonial(false);
+    setIsEditingMilestone(false);
     setFormError('');
   };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    if (tab !== 'edit-blog') {
+    if (tab !== 'edit-blog' && tab !== 'edit-testimonial' && tab !== 'edit-milestone') {
       resetForm();
     }
   };
@@ -163,6 +315,34 @@ export default function AdminDashboard() {
           </button>
           
           <button 
+            onClick={() => handleTabChange('testimonials')}
+            className={`admin-nav-item ${activeTab === 'testimonials' ? 'active' : ''}`}
+          >
+            Manage Testimonials
+          </button>
+
+          <button 
+            onClick={() => handleTabChange('edit-testimonial')}
+            className={`admin-nav-item ${activeTab === 'edit-testimonial' ? 'active' : ''}`}
+          >
+            {isEditingTestimonial ? 'Edit Testimonial ✍️' : 'Add Testimonial ➕'}
+          </button>
+
+          <button 
+            onClick={() => handleTabChange('milestones')}
+            className={`admin-nav-item ${activeTab === 'milestones' ? 'active' : ''}`}
+          >
+            Manage Journey (Timeline)
+          </button>
+
+          <button 
+            onClick={() => handleTabChange('edit-milestone')}
+            className={`admin-nav-item ${activeTab === 'edit-milestone' ? 'active' : ''}`}
+          >
+            {isEditingMilestone ? 'Edit Milestone ✍️' : 'Add Milestone ➕'}
+          </button>
+
+          <button 
             onClick={() => handleTabChange('messages')}
             className={`admin-nav-item ${activeTab === 'messages' ? 'active' : ''}`}
           >
@@ -179,7 +359,15 @@ export default function AdminDashboard() {
       {/* Main Panel Content */}
       <main className="admin-content">
         <header className="admin-header">
-          <h2>{activeTab === 'blogs' ? 'Manage Blogs' : activeTab === 'messages' ? 'Contact Inquiries' : isEditing ? 'Edit Blog Post' : 'Add New Blog Post'}</h2>
+          <h2>
+            {activeTab === 'blogs' && 'Manage Blogs'}
+            {activeTab === 'edit-blog' && (isEditing ? 'Edit Blog Post' : 'Add New Blog Post')}
+            {activeTab === 'testimonials' && 'Manage Testimonials'}
+            {activeTab === 'edit-testimonial' && (isEditingTestimonial ? 'Edit Testimonial' : 'Add Testimonial')}
+            {activeTab === 'milestones' && 'Manage Journey (Milestones)'}
+            {activeTab === 'edit-milestone' && (isEditingMilestone ? 'Edit Milestone' : 'Add Milestone')}
+            {activeTab === 'messages' && 'Contact Inquiries'}
+          </h2>
           <span className="admin-session-badge">Session: Admin User</span>
         </header>
 
@@ -298,7 +486,224 @@ export default function AdminDashboard() {
             </form>
           )}
 
-          {/* TAB 3: CONTACT SUBMISSIONS */}
+          {/* TAB 3: TESTIMONIALS LIST */}
+          {activeTab === 'testimonials' && (
+            <div className="panel-list">
+              {testimonials.length === 0 ? (
+                <div className="panel-empty">No testimonials found. Create one now!</div>
+              ) : (
+                <div className="blogs-table-wrapper">
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Avatar</th>
+                        <th>Author</th>
+                        <th>Role</th>
+                        <th>Rating</th>
+                        <th>Review</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {testimonials.map((t) => (
+                        <tr key={t.id}>
+                          <td style={{ fontSize: '1.5rem', width: '50px' }}>{t.avatar}</td>
+                          <td className="table-title">{t.author}</td>
+                          <td>{t.role}</td>
+                          <td>{'★'.repeat(t.rating)}</td>
+                          <td style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.text}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button onClick={() => startEditTestimonial(t)} className="tbl-btn tbl-btn--edit">Edit</button>
+                              <button onClick={() => handleTestimonialDelete(t.id)} className="tbl-btn tbl-btn--delete">Delete</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 4: TESTIMONIAL FORM (ADD/EDIT) */}
+          {activeTab === 'edit-testimonial' && (
+            <form onSubmit={handleTestimonialSubmit} className="blog-form">
+              {formError && <div className="form-alert error">{formError}</div>}
+              {formSuccess && <div className="form-alert success">{formSuccess}</div>}
+
+              <div className="form-group-row">
+                <div className="form-group flex-1">
+                  <label>Author / Client Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={testimonialForm.author}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, author: e.target.value })}
+                    placeholder="e.g. Dr. Meera Sharma"
+                  />
+                </div>
+                
+                <div className="form-group" style={{ width: '150px' }}>
+                  <label>Rating (Stars)</label>
+                  <select
+                    value={testimonialForm.rating}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, rating: Number(e.target.value) })}
+                  >
+                    <option value={5}>5 Stars</option>
+                    <option value={4}>4 Stars</option>
+                    <option value={3}>3 Stars</option>
+                    <option value={2}>2 Stars</option>
+                    <option value={1}>1 Star</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-group-row">
+                <div className="form-group flex-1">
+                  <label>Role / Organisation</label>
+                  <input
+                    type="text"
+                    value={testimonialForm.role}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, role: e.target.value })}
+                    placeholder="e.g. Head of Culinary Arts, Chandigarh University"
+                  />
+                </div>
+
+                <div className="form-group" style={{ width: '150px' }}>
+                  <label>Avatar Emoji / Icon</label>
+                  <input
+                    type="text"
+                    value={testimonialForm.avatar}
+                    onChange={(e) => setTestimonialForm({ ...testimonialForm, avatar: e.target.value })}
+                    placeholder="e.g. 🇮🇹 or 🍽️"
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Review Text</label>
+                <textarea
+                  required
+                  rows={6}
+                  value={testimonialForm.text}
+                  onChange={(e) => setTestimonialForm({ ...testimonialForm, text: e.target.value })}
+                  placeholder="Write the testimonial review description here..."
+                />
+              </div>
+
+              <div className="form-actions">
+                <button type="button" onClick={() => handleTabChange('testimonials')} className="btn btn--outline">Cancel</button>
+                <button type="submit" disabled={testimonialLoading} className="btn btn--primary">
+                  {testimonialLoading ? 'Saving...' : isEditingTestimonial ? 'Update Testimonial 📝' : 'Publish Testimonial 🌿'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* TAB 5: MILESTONES (JOURNEY) LIST */}
+          {activeTab === 'milestones' && (
+            <div className="panel-list">
+              {milestones.length === 0 ? (
+                <div className="panel-empty">No milestones found. Create one now!</div>
+              ) : (
+                <div className="blogs-table-wrapper">
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Organisation</th>
+                        <th>Milestone / Title</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {milestones.map((m) => (
+                        <tr key={m.id}>
+                          <td className="table-title">{m.org}</td>
+                          <td>{m.title}</td>
+                          <td><span className="table-badge" style={{ textTransform: 'capitalize' }}>{m.type}</span></td>
+                          <td style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.description}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button onClick={() => startEditMilestone(m)} className="tbl-btn tbl-btn--edit">Edit</button>
+                              <button onClick={() => handleMilestoneDelete(m.id)} className="tbl-btn tbl-btn--delete">Delete</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 6: MILESTONE FORM (ADD/EDIT) */}
+          {activeTab === 'edit-milestone' && (
+            <form onSubmit={handleMilestoneSubmit} className="blog-form">
+              {formError && <div className="form-alert error">{formError}</div>}
+              {formSuccess && <div className="form-alert success">{formSuccess}</div>}
+
+              <div className="form-group-row">
+                <div className="form-group flex-1">
+                  <label>Organisation / Client</label>
+                  <input
+                    type="text"
+                    required
+                    value={milestoneForm.org}
+                    onChange={(e) => setMilestoneForm({ ...milestoneForm, org: e.target.value })}
+                    placeholder="e.g. Chandigarh University"
+                  />
+                </div>
+                
+                <div className="form-group" style={{ width: '220px' }}>
+                  <label>Milestone Type</label>
+                  <select
+                    value={milestoneForm.type}
+                    onChange={(e) => setMilestoneForm({ ...milestoneForm, type: e.target.value })}
+                  >
+                    <option value="training">Training</option>
+                    <option value="event">Event</option>
+                    <option value="venture">Venture</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Milestone Title</label>
+                <input
+                  type="text"
+                  required
+                  value={milestoneForm.title}
+                  onChange={(e) => setMilestoneForm({ ...milestoneForm, title: e.target.value })}
+                  placeholder="e.g. Faculty Vegan Culinary Workshop"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  required
+                  rows={6}
+                  value={milestoneForm.description}
+                  onChange={(e) => setMilestoneForm({ ...milestoneForm, description: e.target.value })}
+                  placeholder="Describe the milestone or achievement..."
+                />
+              </div>
+
+              <div className="form-actions">
+                <button type="button" onClick={() => handleTabChange('milestones')} className="btn btn--outline">Cancel</button>
+                <button type="submit" disabled={milestoneLoading} className="btn btn--primary">
+                  {milestoneLoading ? 'Saving...' : isEditingMilestone ? 'Update Milestone 📝' : 'Publish Milestone 🌿'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* TAB 7: CONTACT SUBMISSIONS */}
           {activeTab === 'messages' && (
             <div className="panel-list">
               {messages.length === 0 ? (

@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { siteContent } from '../data/content.js';
 
 // Define database path relative to workspace root
 const DB_PATH = path.join(process.cwd(), 'src/data/db.json');
@@ -44,7 +45,9 @@ export async function readDB() {
       if (doc) {
         return {
           blogs: doc.blogs || [],
-          messages: doc.messages || []
+          messages: doc.messages || [],
+          testimonials: doc.testimonials || siteContent.testimonials.reviews,
+          milestones: doc.milestones || siteContent.milestones.items
         };
       }
       // Auto-initialize MongoDB with local JSON data if collection is empty
@@ -61,10 +64,21 @@ export async function readDB() {
 async function readLocalDB() {
   try {
     const data = await fs.readFile(DB_PATH, 'utf-8');
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+    return {
+      blogs: parsed.blogs || [],
+      messages: parsed.messages || [],
+      testimonials: parsed.testimonials || siteContent.testimonials.reviews,
+      milestones: parsed.milestones || siteContent.milestones.items
+    };
   } catch (error) {
     // Return empty default structure if file not found or corrupted
-    return { blogs: [], messages: [] };
+    return {
+      blogs: [],
+      messages: [],
+      testimonials: siteContent.testimonials.reviews,
+      milestones: siteContent.milestones.items
+    };
   }
 }
 
@@ -78,7 +92,14 @@ export async function writeDB(data) {
     if (collection) {
       await collection.updateOne(
         { _id: 'db_root' },
-        { $set: { blogs: data.blogs || [], messages: data.messages || [] } },
+        { 
+          $set: { 
+            blogs: data.blogs || [], 
+            messages: data.messages || [],
+            testimonials: data.testimonials || [],
+            milestones: data.milestones || []
+          } 
+        },
         { upsert: true }
       );
       return true;

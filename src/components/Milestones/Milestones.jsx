@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -95,7 +95,23 @@ export default function Milestones() {
 
   }, { scope: sectionRef });
 
+  const [items, setItems] = useState(siteContent.milestones.items);
   const { milestones } = siteContent;
+
+  useEffect(() => {
+    async function fetchMilestones() {
+      try {
+        const res = await fetch('/api/milestones');
+        const data = await res.json();
+        if (data.success && data.milestones && data.milestones.length > 0) {
+          setItems(data.milestones);
+        }
+      } catch (err) {
+        console.error('Failed to fetch milestones, falling back to static content:', err);
+      }
+    }
+    fetchMilestones();
+  }, []);
 
   return (
     <section ref={sectionRef} className="milestones section section--dark" id="milestones">
@@ -148,7 +164,7 @@ export default function Milestones() {
             </svg>
           </div>
 
-          {milestones.items.map((item, index) => {
+          {items.map((item, index) => {
             const isLeft = index % 2 === 0;
             const badge = typeBadgeColors[item.type] || typeBadgeColors.training;
 

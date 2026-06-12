@@ -15,7 +15,23 @@ export default function Testimonials() {
   const sectionRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [reviews, setReviews] = useState(siteContent.testimonials.reviews);
   const { testimonials } = siteContent;
+
+  useEffect(() => {
+    async function fetchTestimonials() {
+      try {
+        const res = await fetch('/api/testimonials');
+        const data = await res.json();
+        if (data.success && data.testimonials && data.testimonials.length > 0) {
+          setReviews(data.testimonials);
+        }
+      } catch (err) {
+        console.error('Failed to fetch testimonials, falling back to static content:', err);
+      }
+    }
+    fetchTestimonials();
+  }, []);
 
   useGSAP(() => {
     gsap.fromTo('.test__header > *',
@@ -25,12 +41,12 @@ export default function Testimonials() {
   }, { scope: sectionRef });
 
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || reviews.length === 0) return;
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % testimonials.reviews.length);
+      setActiveIndex((prev) => (prev + 1) % reviews.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [testimonials.reviews.length, isPaused]);
+  }, [reviews.length, isPaused]);
 
   return (
     <section ref={sectionRef} className="test section section--alt" id="testimonials"
@@ -46,7 +62,7 @@ export default function Testimonials() {
         </div>
         <div className="test__carousel">
           <div className="test__track" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
-            {testimonials.reviews.map((review, i) => (
+            {reviews.map((review, i) => (
               <div key={i} className="test__slide">
                 <div className="test__card card">
                   <div className="test__stars">
@@ -65,13 +81,13 @@ export default function Testimonials() {
             ))}
           </div>
           <div className="test__nav">
-            <button className="test__arrow" onClick={() => setActiveIndex((prev) => (prev - 1 + testimonials.reviews.length) % testimonials.reviews.length)}>←</button>
+            <button className="test__arrow" onClick={() => setActiveIndex((prev) => (prev - 1 + reviews.length) % reviews.length)}>←</button>
             <div className="test__dots">
-              {testimonials.reviews.map((_, i) => (
+              {reviews.map((_, i) => (
                 <button key={i} className={`test__dot ${i === activeIndex ? 'test__dot--active' : ''}`} onClick={() => setActiveIndex(i)} />
               ))}
             </div>
-            <button className="test__arrow" onClick={() => setActiveIndex((prev) => (prev + 1) % testimonials.reviews.length)}>→</button>
+            <button className="test__arrow" onClick={() => setActiveIndex((prev) => (prev + 1) % reviews.length)}>→</button>
           </div>
         </div>
       </div>
