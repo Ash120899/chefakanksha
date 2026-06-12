@@ -126,6 +126,30 @@
   font-style: italic;
 }
 
+/* --- Barking dog GIF in Journey --- */
+.journey__quote-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin: var(--space-md) 0;
+  width: 100%;
+}
+
+.journey__dog-wrapper {
+  width: 27%;
+  transform: scaleY(-1);
+  rotate: 196deg;
+  top: 9%;
+  position: absolute;
+  left: -6%;
+}
+
+.journey__dog-gif {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* --- Side image --- */
 .journey__aside {
   position: sticky;

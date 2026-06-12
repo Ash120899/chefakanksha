@@ -36,6 +36,8 @@
 .loading-v2__logo {
   text-align: center;
   z-index: 2;
+  opacity: 0; /* Starts hidden to prevent flash of initial state before GSAP runs */
+  will-change: transform, opacity;
 }
 
 .loading-v2__logo-text {

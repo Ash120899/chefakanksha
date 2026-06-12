@@ -1,9 +1,12 @@
+"use client";
+
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { siteContent } from '../../data/content';
 import { LeafBranchSVG } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './Collaborate.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -75,6 +78,9 @@ export default function Collaborate() {
   return (
     <section ref={sectionRef} className="collaborate section" id="collaborate">
       <div className="grain-overlay" />
+
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="raccoon" position="bottom" />
 
       <div className="container collaborate__container">
         {/* Header */}

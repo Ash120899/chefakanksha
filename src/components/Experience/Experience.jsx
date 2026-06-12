@@ -1,18 +1,40 @@
-import { useRef } from 'react';
+"use client";
+
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { motion } from 'motion/react';
 import { siteContent } from '../../data/content';
 import { icons, LeafSVG } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './Experience.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Experience() {
   const sectionRef = useRef(null);
+  const crocVideoRef = useRef(null);
   const { experience } = siteContent;
   const descriptionParagraphs = experience.description.split('\n\n');
+
+  useEffect(() => {
+    // Play/pause the video when it scrolls into view
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          video.muted = true;
+          video.play().catch(err => console.warn("Croc video play blocked:", err));
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0 });
+
+    if (crocVideoRef.current) videoObserver.observe(crocVideoRef.current);
+    return () => videoObserver.disconnect();
+  }, []);
 
   useGSAP(() => {
     // Header label
@@ -108,6 +130,9 @@ export default function Experience() {
     <section ref={sectionRef} className="experience" id="experience">
       {/* Grain overlay */}
       <div className="grain-overlay" />
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="crocodile" position="left" />
+
 
       <div className="container">
         {/* Centered header */}
@@ -131,7 +156,7 @@ export default function Experience() {
               className="experience__card"
               whileHover={{ y: -10 }}
               transition={{ type: 'spring', stiffness: 280, damping: 20 }}
-              style={{ willChange: 'transform' }}
+              style={{ willChange: 'transform', position: 'relative' }}
             >
               {/* Colored top accent bar */}
               <div

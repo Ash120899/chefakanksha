@@ -101,6 +101,7 @@
   position: sticky;
   top: calc(var(--nav-height) + var(--space-lg));
   perspective: 800px;
+  z-index: 10; /* Local stacking context above section background */
 }
 
 .personal-story__blog-inner {
@@ -109,6 +110,7 @@
   padding: var(--space-xl) var(--space-lg);
   box-shadow: var(--shadow-md);
   position: relative;
+  z-index: 2; /* Stays in front of croc and dog */
   overflow: hidden;
   transition: box-shadow var(--transition-base), transform var(--transition-base);
 }
@@ -122,6 +124,7 @@
   height: 4px;
   background: linear-gradient(90deg, var(--olive-green), var(--leaf-green), var(--sage));
 }
+
 
 .personal-story__blog-inner:hover {
   box-shadow: var(--shadow-lg);
@@ -238,3 +241,56 @@
     font-size: var(--text-base);
   }
 }
+
+/* --- Viewport-Triggered WebM & GIF Animals --- */
+
+.personal-story__walking-wrapper {
+  position: absolute;
+  bottom: -25px;
+  left: 40%;
+  width: 450px;
+  height: auto;
+  z-index: 3; /* Render on top of the wave divider (z-index: 2) */
+  pointer-events: none;
+  opacity: 0.95;
+  animation: walkHorizontalParade 25s linear infinite;
+  will-change: transform;
+}
+
+.personal-story__walking-video {
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Responsiveness for animals */
+@media (max-width: 1024px) {
+  .personal-story__walking-wrapper {
+    width: 350px;
+  }
+  .personal-story__walking-video {
+    max-height: 140px;
+  }
+}
+
+@media (max-width: 640px) {
+  .personal-story__walking-wrapper {
+    width: 250px;
+    animation-duration: 18s;
+  }
+  .personal-story__walking-video {
+    max-height: 90px;
+  }
+}
+
+@keyframes walkHorizontalParade {
+  0% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+

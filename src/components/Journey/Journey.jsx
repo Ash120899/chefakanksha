@@ -1,3 +1,5 @@
+"use client";
+
 // ========================================
 // JOURNEY SECTION — Chef Akanksha
 // ========================================
@@ -7,6 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { siteContent } from '../../data/content';
 import { PawPrintSVG, KittenPawSVG } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './Journey.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -107,16 +110,16 @@ const Journey = () => {
     if (imageEl) {
       gsap.fromTo(
         imageEl,
-        { opacity: 0, x: 60, clipPath: 'inset(10% 10% 10% 10%)' },
+        { opacity: 0, y: 50, clipPath: 'inset(10% 10% 10% 10%)' },
         {
           opacity: 1,
-          x: 0,
+          y: 0,
           clipPath: 'inset(0% 0% 0% 0%)',
           ease: 'none',
           scrollTrigger: {
             trigger: imageEl,
             start: 'top 90%',
-            end: 'top 45%',
+            end: 'top 50%',
             scrub: true,
           },
         }
@@ -165,7 +168,8 @@ const Journey = () => {
     <section className="journey section" id="journey" ref={sectionRef}>
       <div className="grain-overlay" />
 
-      {/* Decorative paw prints */}
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="bunny" position="bottom" />
       <div className="journey__paw journey__paw--1" data-target-opacity="0.12">
         <PawPrintSVG size={50} color="var(--soft-pink)" />
       </div>
@@ -202,13 +206,22 @@ const Journey = () => {
 
               if (isHighlight) {
                 return (
-                  <blockquote
-                    key={i}
-                    className="journey__quote journey__paragraph"
-                    style={{ willChange: 'transform, opacity' }}
-                  >
-                    <p className="journey__quote-text">{para}</p>
-                  </blockquote>
+                  <div key={i} className="journey__quote-wrapper">
+                    {/* Barking Dog GIF placed above the quote box */}
+                    <div className="journey__dog-wrapper">
+                      <img
+                        src="/images/dogs-barking.gif"
+                        alt="Dogs Barking"
+                        className="journey__dog-gif"
+                      />
+                    </div>
+                    <blockquote
+                      className="journey__quote journey__paragraph"
+                      style={{ willChange: 'transform, opacity' }}
+                    >
+                      <p className="journey__quote-text">{para}</p>
+                    </blockquote>
+                  </div>
                 );
               }
 
@@ -225,7 +238,7 @@ const Journey = () => {
           </div>
 
           {/* Side image */}
-          <div className="journey__aside">
+          <div className="journey__aside" style={{ position: 'relative' }}>
             <div className="journey__image-wrapper" style={{ willChange: 'transform, opacity, clip-path' }}>
               <img
                 src="/images/sec-image.png"

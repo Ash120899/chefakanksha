@@ -1,11 +1,14 @@
+"use client";
+
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { PawPrintSVG, KittenPawSVG, HoofPrintSVG, GoatPrintSVG, DuckPrintSVG, HorsePrintSVG } from '../../assets/svg/Icons';
 import './LoadingScreen.css';
 
-// Seed set once at module load to maintain purity during render
-const baseSeed = Math.floor(Math.random() * 100000);
+// Fixed seed ensures identical output on server and client (no hydration mismatch).
+// The seeded PRNG still produces visually varied, natural-looking positions.
+const baseSeed = 42;
 
 export default function LoadingScreen({ onComplete }) {
   const [exiting, setExiting] = useState(false);
@@ -95,19 +98,10 @@ function Variant2({ onDone }) {
       { Comp: HorsePrintSVG, name: 'horse', sizeRange: [20, 26] },
     ];
     
-    // We want 8 separate walking sequences (trails)
-    // To ensure cows and horses are highly represented, we explicitly allocate 2 cow and 2 horse trails,
-    // and choose the remaining 4 trails randomly from all components.
-    const animalIndices = [
-      2, // Cow
-      5, // Horse
-      2, // Cow
-      5, // Horse
-      Math.floor(random() * components.length),
-      Math.floor(random() * components.length),
-      Math.floor(random() * components.length),
-      Math.floor(random() * components.length),
-    ];
+    // Ensure all 6 animal types are represented at least once across the 8 trails
+    const animalIndices = [0, 1, 2, 3, 4, 5];
+    animalIndices.push(Math.floor(random() * 6));
+    animalIndices.push(Math.floor(random() * 6));
     
     // Shuffle the animal index assignments using the local PRNG
     for (let i = animalIndices.length - 1; i > 0; i--) {
@@ -117,15 +111,18 @@ function Variant2({ onDone }) {
       animalIndices[j] = temp;
     }
     
+    // Generate exactly 8 distinct, non-overlapping horizontal trails:
+    // 4 above the logo (spaced vertically at Y=10%, 16%, 22%, 28%)
+    // 4 below the logo (spaced vertically at Y=70%, 76%, 82%, 88%)
     const trails = [
-      { isAbove: true, ltr: true, delay: 0.0, animalIndex: animalIndices[0] },
-      { isAbove: false, ltr: true, delay: 0.15, animalIndex: animalIndices[1] },
-      { isAbove: true, ltr: false, delay: 0.35, animalIndex: animalIndices[2] },
-      { isAbove: false, ltr: false, delay: 0.5, animalIndex: animalIndices[3] },
-      { isAbove: true, ltr: true, delay: 0.7, animalIndex: animalIndices[4] },
-      { isAbove: false, ltr: true, delay: 0.85, animalIndex: animalIndices[5] },
-      { isAbove: true, ltr: false, delay: 1.05, animalIndex: animalIndices[6] },
-      { isAbove: false, ltr: false, delay: 1.2, animalIndex: animalIndices[7] },
+      { ltr: true,  baseVal: 10, delay: 0.0,  animalIndex: animalIndices[0] },
+      { ltr: true,  baseVal: 70, delay: 0.12, animalIndex: animalIndices[1] },
+      { ltr: false, baseVal: 16, delay: 0.25, animalIndex: animalIndices[2] },
+      { ltr: false, baseVal: 76, delay: 0.38, animalIndex: animalIndices[3] },
+      { ltr: true,  baseVal: 22, delay: 0.52, animalIndex: animalIndices[4] },
+      { ltr: true,  baseVal: 82, delay: 0.65, animalIndex: animalIndices[5] },
+      { ltr: false, baseVal: 28, delay: 0.78, animalIndex: animalIndices[6] },
+      { ltr: false, baseVal: 88, delay: 0.9,  animalIndex: animalIndices[7] },
     ];
     
     const result = [];
@@ -133,30 +130,23 @@ function Variant2({ onDone }) {
     
     trails.forEach((trail) => {
       const animal = components[trail.animalIndex];
-      // Generate 11 to 14 steps per trail
-      const stepCount = 11 + Math.floor(random() * 4);
-      
-      // Determine centerline Y for the trail
-      // Above the logo (y = 14% to 26%)
-      // Below the logo (y = 74% to 86%)
-      const baseVal = trail.isAbove ? (14 + random() * 12) : (74 + random() * 12);
-      
-      const stepStagger = 0.08 + random() * 0.04; // stagger between steps
+      // Generate 13 to 15 steps per trail for a denser, more continuous look
+      const stepCount = 13 + Math.floor(random() * 3);
+      const stepStagger = 0.08 + random() * 0.04;
       
       for (let s = 0; s < stepCount; s++) {
         const progress = s / (stepCount - 1);
         const baseX = trail.ltr ? (4 + 92 * progress) : (96 - 92 * progress);
         
-        // Alternating side offset for left/right steps
-        const sideOffset = (s % 2 === 0 ? 1 : -1) * (1.5 + random() * 1.5);
-        const y = baseVal + sideOffset;
-        const x = baseX + (random() - 0.5) * 1.2;
+        // Alternating side offset for left/right steps (compact to avoid path overlapping)
+        const sideOffset = (s % 2 === 0 ? 1 : -1) * (1.0 + random() * 0.6);
+        const y = trail.baseVal + sideOffset;
+        const x = baseX + (random() - 0.5) * 0.4; // compact horizontal wiggle
         
         // Set rotation facing the direction of travel with outward angling
-        // Left foot (even steps) angles outward differently from Right foot (odd steps)
         let rotate = trail.ltr ? 90 : -90;
         const footAngleOffset = s % 2 === 0 ? -12 : 12;
-        rotate += footAngleOffset + Math.floor((random() - 0.5) * 8);
+        rotate += footAngleOffset + Math.floor((random() - 0.5) * 6);
         
         // Calculate size
         const size = animal.Comp === KittenPawSVG 

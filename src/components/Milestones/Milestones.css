@@ -1,5 +1,5 @@
 /* ========================================
-   MILESTONES SECTION
+   MILESTONES SECTION — GROWING STEM REDESIGN
    ======================================== */
 
 .milestones {
@@ -8,7 +8,7 @@
   padding-bottom: calc(var(--space-section) + 60px);
 }
 
-/* --- Decorative floating leaves --- */
+/* Decorative floating leaves */
 .milestones__deco {
   position: absolute;
   pointer-events: none;
@@ -28,7 +28,7 @@
   animation-delay: -7s;
 }
 
-/* --- Header --- */
+/* Header */
 .milestones__header {
   margin-bottom: var(--space-3xl);
   position: relative;
@@ -49,21 +49,21 @@
   line-height: 1.15;
 }
 
-/* --- Timeline container --- */
+/* Timeline Container */
 .milestones__timeline {
   position: relative;
-  max-width: 900px;
+  max-width: 950px;
   margin: 0 auto;
   padding: var(--space-xl) 0;
 }
 
-/* --- SVG vertical line --- */
+/* Winding Plant Stem SVG Line */
 .milestones__line-container {
   position: absolute;
   left: 50%;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 200px;
   transform: translateX(-50%);
   z-index: 1;
 }
@@ -73,7 +73,7 @@
   height: 100%;
 }
 
-/* --- Timeline item --- */
+/* Timeline Item */
 .milestones__item {
   position: relative;
   display: flex;
@@ -88,35 +88,36 @@
 
 .milestones__item--left {
   justify-content: flex-start;
-  padding-right: calc(50% + 30px);
+  padding-right: calc(50% + 50px);
 }
 
 .milestones__item--right {
   justify-content: flex-end;
-  padding-left: calc(50% + 30px);
+  padding-left: calc(50% + 50px);
 }
 
-/* --- Timeline dot --- */
+/* Sprout Leaf Dot */
 .milestones__dot {
   position: absolute;
   left: 50%;
-  top: 24px;
+  top: 36px;
   transform: translateX(-50%);
-  width: 18px;
-  height: 18px;
+  width: 32px;
+  height: 32px;
   z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.milestones__dot-inner {
-  width: 12px;
-  height: 12px;
-  background: var(--leaf-green);
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 12px rgba(122, 158, 109, 0.5);
+.milestones__dot-leaf {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
+  filter: drop-shadow(0 0 6px var(--leaf-green));
 }
 
 .milestones__dot-ring {
@@ -124,29 +125,62 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 24px;
-  height: 24px;
-  border: 2px solid rgba(122, 158, 109, 0.3);
+  width: 36px;
+  height: 36px;
+  border: 1.5px dashed rgba(163, 184, 153, 0.4);
   border-radius: 50%;
-  animation: pulse 3s ease-in-out infinite;
+  animation: spin 16s linear infinite;
 }
 
-/* --- Glassmorphic card --- */
+/* Leaf-Shaped Glassmorphic Cards */
 .milestones__card {
   position: relative;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg) var(--space-xl);
-  overflow: hidden;
-  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  padding: 32px 40px;
+  overflow: visible;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), transform 0.3s, background-color 0.3s;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Asymmetric organic leaf shapes pointing towards the dots */
+.milestones__card--left {
+  border-radius: 80px 4px 80px 4px;
+}
+
+.milestones__card--right {
+  border-radius: 4px 80px 4px 80px;
+}
+
+/* Branch / Stem connectors pointing from the pointed tip of the leaf to the dot */
+.milestones__card::after {
+  content: '';
+  position: absolute;
+  top: 50px;
+  height: 2px;
+  background: linear-gradient(to right, rgba(163, 184, 153, 0.8), rgba(163, 184, 153, 0.3));
+  pointer-events: none;
+  z-index: -1;
+  width: 50px;
+}
+
+.milestones__card--left::after {
+  right: -50px;
+  background: linear-gradient(to right, rgba(163, 184, 153, 0.3), rgba(163, 184, 153, 0.8));
+}
+
+.milestones__card--right::after {
+  left: -50px;
+  background: linear-gradient(to left, rgba(163, 184, 153, 0.3), rgba(163, 184, 153, 0.8));
 }
 
 .milestones__card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(163, 184, 153, 0.45);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35), 0 0 25px rgba(163, 184, 153, 0.15);
+  transform: translateY(-4px) scale(1.01);
 }
 
 .milestones__card-glow {
@@ -155,15 +189,36 @@
   right: -40px;
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, rgba(122, 158, 109, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(163, 184, 153, 0.15) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
 
-/* --- Badge --- */
+/* Subtle leaf vein lines on card backgrounds */
+.milestones__card-leaf-vein {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.milestones__vein-svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+}
+
+/* Badge */
 .milestones__badge {
+  position: relative;
+  z-index: 1;
   display: inline-block;
-  padding: 0.25em 0.85em;
+  padding: 0.3em 1em;
   font-family: var(--font-body);
   font-size: var(--text-xs);
   font-weight: 700;
@@ -174,8 +229,10 @@
   margin-bottom: var(--space-sm);
 }
 
-/* --- Card content --- */
+/* Card Content */
 .milestones__org {
+  position: relative;
+  z-index: 1;
   display: block;
   font-family: var(--font-body);
   font-size: var(--text-sm);
@@ -186,6 +243,8 @@
 }
 
 .milestones__card-title {
+  position: relative;
+  z-index: 1;
   font-family: var(--font-heading);
   font-size: var(--text-xl);
   color: var(--cream);
@@ -194,14 +253,15 @@
 }
 
 .milestones__card-desc {
+  position: relative;
+  z-index: 1;
   font-size: var(--text-sm);
   color: rgba(212, 196, 176, 0.85);
   line-height: 1.7;
   margin-bottom: 0;
-  letter-spacing: 1.2px;
 }
 
-/* --- Wave at bottom --- */
+/* Wave at bottom */
 .milestones .section-wave--bottom {
   position: absolute;
   bottom: -1px;
@@ -224,12 +284,13 @@
 @media (max-width: 900px) {
   .milestones__timeline {
     max-width: 100%;
-    padding-left: 40px;
+    padding-left: 60px;
   }
 
   .milestones__line-container {
-    left: 16px;
+    left: 25px;
     transform: none;
+    width: 50px;
   }
 
   .milestones__item--left,
@@ -240,8 +301,24 @@
   }
 
   .milestones__dot {
-    left: 16px;
+    left: 25px;
     transform: translateX(-50%);
+    top: 24px;
+  }
+
+  /* Make all cards look like right-side cards on mobile (tapering towards the left dot) */
+  .milestones__card--left,
+  .milestones__card--right {
+    border-radius: 4px 80px 4px 80px !important;
+  }
+
+  /* Make all card connectors point to the left dot on mobile */
+  .milestones__card::after {
+    left: -25px !important;
+    right: auto !important;
+    width: 25px !important;
+    top: 39px !important;
+    background: linear-gradient(to left, rgba(163, 184, 153, 0.3), rgba(163, 184, 153, 0.8)) !important;
   }
 }
 
@@ -255,7 +332,7 @@
   }
 
   .milestones__card {
-    padding: var(--space-md) var(--space-lg);
+    padding: 24px var(--space-lg);
   }
 
   .milestones__card-title {

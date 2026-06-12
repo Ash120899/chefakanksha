@@ -1,9 +1,12 @@
+"use client";
+
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { siteContent } from '../../data/content';
 import { icons, LeafSVG } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './VeganPiatto.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -117,6 +120,9 @@ export default function VeganPiatto() {
     <section ref={sectionRef} className="vp section" id="vegan-piatto">
       <div className="grain-overlay" />
 
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="cow" position="bottom" />
+
       {/* Decorative leaves */}
       <div className="vp__leaf vp__leaf--1">
         <LeafSVG size={50} color="var(--sage)" />
@@ -142,7 +148,7 @@ export default function VeganPiatto() {
             ))}
           </div>
 
-          <div className="vp__image-side">
+          <div className="vp__image-side" style={{ position: 'relative' }}>
             <div className="vp__image-wrapper" style={{ willChange: 'transform' }}>
               <img
                 src="/images/pasta-shot.png"

@@ -1,3 +1,5 @@
+"use client";
+
 // ========================================
 // HERO SECTION — Chef Akanksha
 // ========================================
@@ -194,7 +196,6 @@ const Hero = () => {
   return (
     <section className="hero section" id="hero" ref={sectionRef}>
       <div className="grain-overlay" />
-
       {/* Decorative parallax elements */}
       <div className="hero__decorations">
         <div ref={addParallaxRef} data-depth="1.2" className="hero__deco hero__deco--leaf-1" style={{ willChange: 'transform' }}>
@@ -246,7 +247,7 @@ const Hero = () => {
         </div>
 
         {/* Chef image in organic blob */}
-        <div className="hero__visual" ref={imageRef}>
+        <div className="hero__visual" ref={imageRef} style={{ position: 'relative' }}>
           <div className="hero__image-wrapper" style={{ willChange: 'clip-path, transform, opacity' }}>
             <div className="hero__blob-shape">
               <img

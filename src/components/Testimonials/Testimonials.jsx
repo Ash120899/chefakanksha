@@ -1,9 +1,12 @@
+"use client";
+
 import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { siteContent } from '../../data/content';
 import { StarSVG, PawPrintSVG } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './Testimonials.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -32,6 +35,10 @@ export default function Testimonials() {
   return (
     <section ref={sectionRef} className="test section section--alt" id="testimonials"
       onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="bird" position="top" />
+
       <div className="container">
         <div className="test__header text-center">
           <span className="label">{testimonials.label} 🐾💚</span>

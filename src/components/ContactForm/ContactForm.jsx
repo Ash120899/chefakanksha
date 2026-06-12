@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,6 +16,8 @@ export default function ContactForm() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useGSAP(() => {
     gsap.fromTo('.contact__header > *',
@@ -32,10 +36,30 @@ export default function ContactForm() {
 
   const { contact } = siteContent;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setIsSubmitting(true);
+    setSubmitError('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setSubmitted(false), 3000);
+      } else {
+        setSubmitError(data.error || 'Failed to submit. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setSubmitError('Network error. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -75,9 +99,10 @@ export default function ContactForm() {
               <textarea name="message" value={formData.message} onChange={handleChange} onFocus={() => setFocused('message')} onBlur={() => setFocused('')} rows="4" required />
               <div className="contact__field-line" />
             </div>
-            <motion.button type="submit" className={`btn btn--primary contact__submit ${submitted ? 'contact__submit--sent' : ''}`} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              {submitted ? '✓ Message Sent!' : <>{icons.send(18)} Send Message</>}
+            <motion.button type="submit" disabled={isSubmitting} className={`btn btn--primary contact__submit ${submitted ? 'contact__submit--sent' : ''}`} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              {isSubmitting ? 'Sending...' : submitted ? '✓ Message Sent!' : <>{icons.send(18)} Send Message</>}
             </motion.button>
+            {submitError && <p className="contact__error" style={{ color: '#d9534f', marginTop: '10px', fontSize: '0.9rem' }}>{submitError}</p>}
           </form>
           <div className="contact__info">
             <div className="contact__info-items">

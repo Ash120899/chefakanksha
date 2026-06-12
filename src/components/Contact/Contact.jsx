@@ -1,9 +1,12 @@
+"use client";
+
 import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { siteContent } from '../../data/content';
 import { icons } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './Contact.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,6 +23,8 @@ export default function Contact() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useGSAP(() => {
     // Label
@@ -99,15 +104,33 @@ export default function Contact() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    // Reset after 4 seconds
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setFocused({});
-    }, 4000);
+    setIsSubmitting(true);
+    setSubmitError('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setFocused({});
+        setTimeout(() => {
+          setSubmitted(false);
+        }, 4000);
+      } else {
+        setSubmitError(data.error || 'Failed to send message. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setSubmitError('Failed to connect to the server. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Split subtitle by \n\n
@@ -126,6 +149,9 @@ export default function Contact() {
   return (
     <section ref={sectionRef} className="contact section section--dark" id="contact">
       <div className="grain-overlay" />
+
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="bear" position="right" />
 
       {/* Decorative gradient overlay */}
       <div className="contact__gradient" />
@@ -208,9 +234,11 @@ export default function Contact() {
               <button
                 type="submit"
                 className={`contact__submit btn btn--primary ${submitted ? 'contact__submit--success' : ''}`}
-                disabled={submitted}
+                disabled={submitted || isSubmitting}
               >
-                {submitted ? (
+                {isSubmitting ? (
+                  'Sending...'
+                ) : submitted ? (
                   <>
                     <span className="contact__submit-check">✓</span>
                     Message Sent!
@@ -222,6 +250,7 @@ export default function Contact() {
                   </>
                 )}
               </button>
+              {submitError && <p className="contact__error" style={{ color: '#ff6b6b', marginTop: '15px', fontSize: '0.9rem' }}>{submitError}</p>}
             </form>
           </div>
 

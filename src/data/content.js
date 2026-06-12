@@ -189,6 +189,7 @@ export const siteContent = {
     blogTitle: '"The Day I Almost Left The Culinary Industry"',
   },
 
+
   collaborate: {
     label: 'CREATING THE FUTURE OF FOOD TOGETHER',
     title: 'For organisations, brands & changemakers.',
@@ -234,6 +235,34 @@ export const siteContent = {
       { platform: 'Instagram', url: 'https://www.instagram.com/chefakanksha_' },
       { platform: 'Facebook', url: 'https://www.facebook.com/TheRecipeSchool' },
       { platform: 'Linkedin', url: 'https://www.linkedin.com/in/chef-akanksha-pathak-2692701b1/' },
+    ],
+  },
+
+  testimonials: {
+    label: 'TESTIMONIALS',
+    title: 'Words from the table.',
+    reviews: [
+      {
+        rating: 5,
+        text: 'Chef Akanksha redefined what we believed was possible with plant-based cuisine. Her attention to Italian traditions while introducing pure, cruelty-free ingredients left our guests in absolute awe.',
+        avatar: '🇮🇹',
+        author: 'Chef Alessandro Rossi',
+        role: 'Culinary Director, Milan',
+      },
+      {
+        rating: 5,
+        text: 'The training sessions she conducted for our university faculty were exceptional. Her deep understanding of vegan ingredients and structured cooking techniques inspired our entire department.',
+        avatar: '🎓',
+        author: 'Dr. Meera Sharma',
+        role: 'Head of Culinary Arts, Chandigarh University',
+      },
+      {
+        rating: 5,
+        text: "Akanksha's private dining experience was a masterclass in taste and compassion. Every course was beautifully presented, telling a story of handmade craftsmanship and plant-based innovation.",
+        avatar: '🍽️',
+        author: 'Rohan Mehta',
+        role: 'Founder, GreenFoods India',
+      },
     ],
   },
 

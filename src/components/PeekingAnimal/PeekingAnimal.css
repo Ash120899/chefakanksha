@@ -1,0 +1,297 @@
+/* ========================================
+   PEEKING ANIMALS — PLAYFUL & CREATIVE MINI-GAME
+   Works inside overflow:hidden containers
+   ======================================== */
+
+.peeking-animal {
+  position: absolute;
+  pointer-events: none; /* Do not block hover when hidden */
+  z-index: 50;          /* Float above card content but below modals */
+  cursor: pointer;
+  transition: opacity 0.3s ease-out,
+              transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: opacity, transform;
+}
+
+/* === BOTTOM EDGE === */
+.peeking-animal--bottom {
+  bottom: 0;
+  left: var(--offset, 50%);
+  transform: translate(-50%, 100%); /* Hidden: fully below */
+}
+.peeking-animal--bottom.peeking {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 10px); /* Peek up: mostly visible */
+}
+
+/* === TOP EDGE === */
+.peeking-animal--top {
+  top: 0;
+  left: var(--offset, 50%);
+  transform: translate(-50%, -100%) rotate(180deg); /* Hidden: fully above */
+}
+.peeking-animal--top.peeking {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -10px) rotate(180deg); /* Peek down */
+}
+
+/* === LEFT EDGE === */
+.peeking-animal--left {
+  left: 0;
+  top: var(--offset, 50%);
+  transform: translate(-100%, -50%) rotate(90deg); /* Hidden: fully left */
+}
+.peeking-animal--left.peeking {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(10px, -50%) rotate(90deg); /* Peek right */
+}
+
+/* === RIGHT EDGE === */
+.peeking-animal--right {
+  right: 0;
+  top: var(--offset, 50%);
+  transform: translate(100%, -50%) rotate(-90deg); /* Hidden: fully right */
+}
+.peeking-animal--right.peeking {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-10px, -50%) rotate(-90deg); /* Peek left */
+}
+
+/* === HIDDEN STATE (default) === */
+.peeking-animal {
+  opacity: 0;
+}
+
+/* === VISIBLE STATES === */
+.peeking-animal.peeking,
+.peeking-animal.won {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === SCARED STATE — vanish quickly === */
+.peeking-animal.scared {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease-out, transform 0.12s ease-out;
+}
+.peeking-animal--bottom.scared {
+  transform: translate(-50%, 100%) scale(0.4);
+}
+.peeking-animal--top.scared {
+  transform: translate(-50%, -100%) rotate(180deg) scale(0.4);
+}
+.peeking-animal--left.scared {
+  transform: translate(-100%, -50%) rotate(90deg) scale(0.4);
+}
+.peeking-animal--right.scared {
+  transform: translate(100%, -50%) rotate(-90deg) scale(0.4);
+}
+
+/* === WON STATE — happy bounce === */
+.peeking-animal--bottom.won {
+  transform: translate(-50%, -5px) scale(1.15);
+}
+.peeking-animal--top.won {
+  transform: translate(-50%, 5px) rotate(180deg) scale(1.15);
+}
+.peeking-animal--left.won {
+  transform: translate(15px, -50%) rotate(90deg) scale(1.15);
+}
+.peeking-animal--right.won {
+  transform: translate(-15px, -50%) rotate(-90deg) scale(1.15);
+}
+
+/* === SVG WRAPPER === */
+.peeking-animal__wrapper {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.won .animal-svg {
+  animation: happySpin 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes happySpin {
+  0% { transform: rotate(-10deg) scale(1); }
+  100% { transform: rotate(10deg) scale(1.1); }
+}
+
+/* === EXCLAMATION BUBBLE (on scared) === */
+.peeking-animal__exclamation {
+  position: absolute;
+  top: -16px;
+  left: 70%;
+  transform: scale(0.5);
+  background: var(--soft-pink);
+  border: 1.5px solid var(--dark-brown);
+  color: var(--dark-brown);
+  font-family: var(--font-body);
+  font-weight: 900;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  opacity: 0;
+  box-shadow: var(--shadow-sm);
+  transition: opacity 0.1s ease-out, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scared .peeking-animal__exclamation {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* === SPEECH BUBBLE === */
+.peeking-animal__bubble {
+  position: absolute;
+  background: var(--cream);
+  border: 2px solid var(--dark-brown);
+  color: var(--dark-brown);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-family: var(--font-handwritten);
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.8) translate(-50%, -10px);
+  transform-origin: bottom center;
+  transition: opacity 0.2s, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.3);
+  z-index: 105;
+}
+
+/* Position speech bubble relative to the animal's edge */
+.peeking-animal--bottom .peeking-animal__bubble {
+  top: -45px;
+  left: 50%;
+  transform: scale(0.8) translateX(-50%);
+}
+.peeking-animal--top .peeking-animal__bubble {
+  bottom: -45px;
+  left: 50%;
+  transform: scale(0.8) translateX(-50%) rotate(180deg);
+}
+.peeking-animal--left .peeking-animal__bubble {
+  top: -45px;
+  left: 50%;
+  transform: scale(0.8) translateX(-50%) rotate(-90deg);
+}
+.peeking-animal--right .peeking-animal__bubble {
+  top: -45px;
+  left: 50%;
+  transform: scale(0.8) translateX(-50%) rotate(90deg);
+}
+
+/* Active bubble states */
+.peeking.peeking-animal .peeking-animal__bubble,
+.won.peeking-animal .peeking-animal__bubble {
+  opacity: 1;
+}
+
+.peeking-animal--bottom.peeking .peeking-animal__bubble {
+  transform: scale(1) translateX(-50%);
+}
+.peeking-animal--top.peeking .peeking-animal__bubble {
+  transform: scale(1) translateX(-50%) rotate(180deg);
+}
+.peeking-animal--left.peeking .peeking-animal__bubble {
+  transform: scale(1) translateX(-50%) rotate(-90deg);
+}
+.peeking-animal--right.peeking .peeking-animal__bubble {
+  transform: scale(1) translateX(-50%) rotate(90deg);
+}
+
+/* Arrow for speech bubble */
+.peeking-animal__bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 7px 7px 0;
+  border-style: solid;
+  border-color: var(--dark-brown) transparent;
+  display: block;
+  width: 0;
+}
+
+/* === FLOATING PARTICLES === */
+.peeking-particle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.1rem;
+  z-index: 110;
+  animation: floatParticle 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(1.2) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+/* === EYE BLINK === */
+.animal-eye {
+  animation: animalBlink 4.5s infinite;
+  transform-origin: center;
+}
+
+@keyframes animalBlink {
+  0%, 93%, 100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* === SVG STYLES === */
+.animal-svg {
+  filter: drop-shadow(0 4px 8px rgba(92, 74, 50, 0.12));
+  transition: transform 0.2s ease-out;
+}
+
+/* Hover wiggles */
+.peeking-animal:hover .animal-svg {
+  transform: scale(1.06);
+}
+
+.wiggle-ear-left {
+  transform-origin: 20px 30px;
+  animation: wiggleEarLeft 7s ease-in-out infinite;
+}
+
+.wiggle-ear-right {
+  transform-origin: 40px 30px;
+  animation: wiggleEarRight 7s ease-in-out infinite;
+}
+
+@keyframes wiggleEarLeft {
+  0%, 92%, 100% { transform: rotate(0deg); }
+  94% { transform: rotate(-10deg); }
+  96% { transform: rotate(5deg); }
+}
+
+@keyframes wiggleEarRight {
+  0%, 92%, 100% { transform: rotate(0deg); }
+  94% { transform: rotate(10deg); }
+  96% { transform: rotate(-5deg); }
+}

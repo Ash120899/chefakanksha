@@ -1,9 +1,12 @@
+"use client";
+
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { siteContent } from '../../data/content';
 import { LeafSVG } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './Milestones.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -19,7 +22,7 @@ export default function Milestones() {
   const timelineLineRef = useRef(null);
 
   useGSAP(() => {
-    // --- Draw the vertical timeline line via stroke-dashoffset ---
+    // --- Draw the vertical winding vine via stroke-dashoffset ---
     const line = timelineLineRef.current;
     if (line) {
       const length = line.getTotalLength();
@@ -60,9 +63,9 @@ export default function Milestones() {
     cards.forEach((card, i) => {
       const isLeft = i % 2 === 0;
       gsap.fromTo(card,
-        { opacity: 0, x: isLeft ? -80 : 80, scale: 0.9 },
+        { opacity: 0, x: isLeft ? -80 : 80, scale: 0.9, rotate: isLeft ? -3 : 3 },
         {
-          opacity: 1, x: 0, scale: 1, ease: 'none',
+          opacity: 1, x: 0, scale: 1, rotate: 0, ease: 'none',
           scrollTrigger: {
             trigger: card,
             start: 'top 85%',
@@ -73,13 +76,13 @@ export default function Milestones() {
       );
     });
 
-    // --- Timeline dot pulses ---
+    // --- Timeline sprout dots rotate and bloom ---
     const dots = gsap.utils.toArray('.milestones__dot');
     dots.forEach((dot) => {
       gsap.fromTo(dot,
-        { scale: 0, opacity: 0 },
+        { scale: 0, rotate: -90, opacity: 0 },
         {
-          scale: 1, opacity: 1, ease: 'none',
+          scale: 1, rotate: 0, opacity: 1, ease: 'none',
           scrollTrigger: {
             trigger: dot,
             start: 'top 80%',
@@ -98,6 +101,9 @@ export default function Milestones() {
     <section ref={sectionRef} className="milestones section section--dark" id="milestones">
       <div className="grain-overlay" />
 
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="squirrel" position="right" />
+
       {/* Decorative floating leaves */}
       <div className="milestones__deco milestones__deco--1">
         <LeafSVG size={40} color="rgba(163, 184, 153, 0.12)" />
@@ -115,15 +121,29 @@ export default function Milestones() {
 
         {/* Timeline */}
         <div className="milestones__timeline">
-          {/* SVG vertical line */}
+          {/* SVG winding stem line */}
           <div className="milestones__line-container">
-            <svg className="milestones__line-svg" viewBox="0 0 4 600" preserveAspectRatio="none">
+            <svg className="milestones__line-svg" viewBox="0 0 200 800" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+              {/* Straight main root that goes perfectly through all dots */}
               <line
-                ref={timelineLineRef}
-                x1="2" y1="0" x2="2" y2="600"
+                x1="100"
+                y1="0"
+                x2="100"
+                y2="800"
                 stroke="var(--sage)"
-                strokeWidth="2"
+                strokeWidth="3.5"
                 strokeLinecap="round"
+                opacity="0.8"
+              />
+              {/* Winding organic root that twists around the main line */}
+              <path
+                ref={timelineLineRef}
+                d="M100,0 Q140,150 60,300 T140,600 T100,800"
+                fill="none"
+                stroke="var(--sage)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                opacity="0.5"
               />
             </svg>
           </div>
@@ -137,15 +157,41 @@ export default function Milestones() {
                 key={index}
                 className={`milestones__item milestones__item--${isLeft ? 'left' : 'right'}`}
               >
-                {/* Timeline dot */}
-                <div className="milestones__dot" style={{ willChange: 'transform' }}>
-                  <div className="milestones__dot-inner" />
+                {/* Timeline sprout leaf-dot */}
+                <div className="milestones__dot" style={{ willChange: 'transform, opacity' }}>
+                  <div className="milestones__dot-leaf">
+                    <LeafSVG size={18} color="var(--leaf-green)" />
+                  </div>
                   <div className="milestones__dot-ring" />
                 </div>
 
-                {/* Card */}
-                <div className="milestones__card" style={{ willChange: 'transform' }}>
+                {/* Leaf shaped card */}
+                <div 
+                  className={`milestones__card milestones__card--${isLeft ? 'left' : 'right'}`}
+                  style={{ willChange: 'transform', position: 'relative' }}
+                >
                   <div className="milestones__card-glow" />
+                  <div className="milestones__card-leaf-vein">
+                    {/* Organic SVG Leaf Veins */}
+                    {isLeft ? (
+                      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="milestones__vein-svg">
+                        <path d="M5,95 Q40,50 95,5" stroke="var(--cream)" strokeWidth="1.5" fill="none" opacity="0.12" />
+                        <path d="M30,65 Q55,60 75,70" stroke="var(--cream)" strokeWidth="1" fill="none" opacity="0.08" />
+                        <path d="M50,45 Q70,35 85,42" stroke="var(--cream)" strokeWidth="1" fill="none" opacity="0.08" />
+                        <path d="M20,80 Q25,50 45,40" stroke="var(--cream)" strokeWidth="1" fill="none" opacity="0.08" />
+                        <path d="M40,58 Q45,30 65,22" stroke="var(--cream)" strokeWidth="1" fill="none" opacity="0.08" />
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="milestones__vein-svg">
+                        <path d="M95,95 Q60,50 5,5" stroke="var(--cream)" strokeWidth="1.5" fill="none" opacity="0.12" />
+                        <path d="M70,65 Q45,60 25,70" stroke="var(--cream)" strokeWidth="1" fill="none" opacity="0.08" />
+                        <path d="M50,45 Q30,35 15,42" stroke="var(--cream)" strokeWidth="1" fill="none" opacity="0.08" />
+                        <path d="M80,80 Q75,50 55,40" stroke="var(--cream)" strokeWidth="1" fill="none" opacity="0.08" />
+                        <path d="M60,58 Q55,30 35,22" stroke="var(--cream)" strokeWidth="1" fill="none" opacity="0.08" />
+                      </svg>
+                    )}
+                  </div>
+                  
                   <span
                     className="milestones__badge"
                     style={{
@@ -166,7 +212,7 @@ export default function Milestones() {
         </div>
       </div>
 
-      {/* Organic wave at bottom */}
+      {/* Organic bottom wave */}
       <div className="section-wave section-wave--bottom">
         <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
           <path d="M0,60 C240,120 480,0 720,60 C960,120 1200,20 1440,70 L1440,120 L0,120Z" fill="var(--cream)" />

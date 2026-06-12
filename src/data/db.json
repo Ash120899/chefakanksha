@@ -1,0 +1,44 @@
+{
+  "blogs": [
+    {
+      "id": "1",
+      "slug": "day-i-almost-left-culinary-industry",
+      "title": "The Day I Almost Left The Culinary Industry",
+      "date": "June 2, 2026",
+      "excerpt": "Reflections on navigating professional kitchens as a vegetarian, questioning my path, and finding my true purpose in plant-based innovation.",
+      "content": "Entering the culinary industry as someone who had never eaten meat came with a question I carried every day: \"Is there a place for a chef like me here?\"\n\nDuring my early training years, my biggest challenge was navigating professional kitchens while staying connected to my values. I watched traditional techniques rely heavily on animal products, and there was a prevailing attitude that fine dining had to look a certain way.\n\nThere was a specific evening, during a grueling service, where I felt entirely disconnected from my purpose. I almost hung up my chef coat for good. But instead of leaving, I chose to change direction.\n\nI realized my vegetarianism and compassion weren't limitations. They were my speciality. Leaving behind dairy, cheese, and traditional animal ingredients challenged me to understand food at a deeper level. I began exploring how to replicate the chemistry of classic Italian dishes using organic plant alternatives.\n\nToday, I look back on that day of doubt as the catalyst for everything I build. The future of food belongs to innovation and compassion.",
+      "image": "/images/sec-image.png",
+      "category": "My Journey"
+    },
+    {
+      "id": "2",
+      "slug": "art-of-vegan-cheese",
+      "title": "The Art of Vegan Cheese Crafting",
+      "date": "May 15, 2026",
+      "excerpt": "How understanding fermentation and traditional Italian dairy methods helped unlock rich, melting, plant-based mozzarella and aged parmesan.",
+      "content": "Cheese is the soul of Italian cuisine. When I set out to specialize in plant-based Italian cooking, the biggest challenge wasn't the pasta, but the cheese. How could you replicate the stretch of fresh mozzarella or the deep umami of aged Parmigiano-Reggiano without dairy?\n\nMost commercial vegan cheeses rely on starches and oils. They melt, but they lack soul. I wanted to treat plant-based cheese-making like a traditional craft.\n\nBy leveraging raw cashews, almonds, and homemade rejuvelac (a fermented grain liquid), I began aging cheeses in controlled settings. The result was remarkable: we developed lactic acidity, complex rind structures, and a natural melt that rivals traditional cheeses.\n\nIn this blog, we explore the step-by-step fermentation science behind cashew-based mozzarella and how small-batch plant cheese can elevate restaurant menus.",
+      "image": "/images/vegan-cheese-icon.png",
+      "category": "Culinary Innovation"
+    },
+    {
+      "id": "3",
+      "slug": "redefining-pasta-tradition",
+      "title": "Redefining Pasta: Keeping Tradition, Adding Compassion",
+      "date": "April 28, 2026",
+      "excerpt": "Perfecting handmade semolina dough, rich tomato reductions, and fresh herbal infusions without relying on eggs or dairy.",
+      "content": "Making pasta is a form of meditation. In traditional Italian cooking, egg yolks are often used to enrich fresh pasta dough, providing that signature bite and gold color.\n\nHowever, by using high-quality Semola di Grano Duro (durum wheat semolina) and mapping the precise hydration levels, you can create a bite that is just as firm and toothsome—naturally egg-free.\n\nIn my kitchen, we combine slow-extruded and hand-rolled shapes with vibrant, slow-cooked sauces. A dash of saffron or carrot infusion can bring back that warm golden hue, while fresh basil oil provides a clean finish.\n\nThis article shares my recipe for the ultimate vegan fresh pasta dough and three simple sauces that let the durum wheat shine.",
+      "image": "/images/pasta-shot.png",
+      "category": "Italian Craft"
+    }
+  ],
+  "messages": [
+    {
+      "id": "1780656000248",
+      "name": "Ashutosh Upadhyay",
+      "email": "ashuupadhyay0812@gmail.com",
+      "subject": "Just saying hello",
+      "message": "HEllo",
+      "date": "June 5, 2026 at 04:10 PM"
+    }
+  ]
+}

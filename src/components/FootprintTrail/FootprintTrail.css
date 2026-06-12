@@ -1,0 +1,34 @@
+/* ========================================
+   FOOTPRINT SCROLL TRAIL — ANIMATIONS
+   ======================================== */
+
+.footprint-trail-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 999999;
+  overflow: visible;
+}
+
+/* Each step has position:fixed and rotation on container — inner handles fade/scale animation */
+.footprint-step {
+  pointer-events: none;
+}
+
+.footprint-inner {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  will-change: opacity, transform;
+  animation: footprintFade 1.8s ease-out forwards;
+}
+
+@keyframes footprintFade {
+  0%   { opacity: 0;    transform: scale(0.6); }
+  20%  { opacity: 0.85; transform: scale(1.1); }
+  60%  { opacity: 0.5;  transform: scale(1); }
+  100% { opacity: 0;    transform: scale(0.9); }
+}

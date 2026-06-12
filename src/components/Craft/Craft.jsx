@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -5,6 +7,7 @@ import { useGSAP } from '@gsap/react';
 import { motion } from 'motion/react';
 import { siteContent } from '../../data/content';
 import { LeafSVG } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './Craft.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -157,6 +160,9 @@ export default function Craft() {
       {/* Grain overlay */}
       <div className="grain-overlay" />
 
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="fox" position="right" />
+
       {/* Background accent image */}
       <div className="craft__bg-accent" style={{ willChange: 'transform' }}>
         <img
@@ -195,7 +201,7 @@ export default function Craft() {
                 className="craft__speciality-card"
                 whileHover={{ y: -8, scale: 1.04 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                style={{ willChange: 'transform' }}
+                style={{ willChange: 'transform', position: 'relative' }}
               >
                 <img src={item.Image} alt={item.title} className="craft__speciality-image" />
                 <span className="craft__speciality-title">{item.title}</span>

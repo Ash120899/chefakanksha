@@ -1,16 +1,45 @@
-import { useRef } from 'react';
+"use client";
+
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { siteContent } from '../../data/content';
 import { HeartSVG, LeafSVG } from '../../assets/svg/Icons';
+import PeekingAnimal from '../PeekingAnimal/PeekingAnimal';
 import './PersonalStory.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function PersonalStory() {
   const sectionRef = useRef(null);
+  const walkingVideoRef = useRef(null);
   const { personalStory } = siteContent;
+
+  useEffect(() => {
+    console.log("PersonalStory mounted, initializing IntersectionObserver for animals...");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        console.log(`Video intersection change: ${video.src} isIntersecting=${entry.isIntersecting}`);
+        if (entry.isIntersecting) {
+          // Explicitly set muted to true as a JS property to override browser autoplay restrictions
+          video.muted = true;
+          video.play()
+            .then(() => console.log(`Video playing successfully: ${video.src}`))
+            .catch(err => console.warn(`Video play failed for ${video.src}:`, err));
+        } else {
+          video.pause();
+          console.log(`Video paused: ${video.src}`);
+        }
+      });
+    }, { threshold: 0 }); // Trigger play/pause as soon as even 1px is visible
+
+    if (walkingVideoRef.current) observer.observe(walkingVideoRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
 
   useGSAP(() => {
     // Label reveal
@@ -78,6 +107,9 @@ export default function PersonalStory() {
     <section ref={sectionRef} className="personal-story section section--alt" id="personal-story">
       <div className="grain-overlay" />
 
+      {/* Peeking Animal mini-game */}
+      <PeekingAnimal type="puppy" position="left" />
+
       {/* Background image */}
       <div className="personal-story__bg-wrapper">
         <img
@@ -142,6 +174,20 @@ export default function PersonalStory() {
       </div>
       <div className="personal-story__heart-deco personal-story__heart-deco--2" style={{ willChange: 'transform' }}>
         <LeafSVG size={34} color="var(--sage)" />
+      </div>
+
+      {/* Walking animals along wave divider */}
+      <div className="personal-story__walking-wrapper" data-reload="1">
+        <video
+          ref={walkingVideoRef}
+          src="/images/animals-walking.webm"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="personal-story__walking-video"
+        />
       </div>
 
       {/* Organic wave divider */}

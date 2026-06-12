@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from 'react';
 import './CustomCursor.css';
 
@@ -101,8 +103,6 @@ export default function CustomCursor() {
       ref={cursorRef}
       className={`custom-cursor-wrapper ${isHovering ? 'custom-cursor-wrapper--hover' : ''} ${isClicking ? 'custom-cursor-wrapper--click' : ''}`}
     >
-      {/* Outer ring */}
-      <div className="custom-cursor__ring" />
       {/* Inner dot - paw shape */}
       <svg className="custom-cursor__paw" width="20" height="20" viewBox="0 0 64 64" fill="var(--olive-green)">
         <ellipse cx="22" cy="16" rx="5" ry="6.5" opacity="0.9" />
