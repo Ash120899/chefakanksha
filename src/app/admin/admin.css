@@ -527,3 +527,9 @@
   margin: 15px 0;
 }
 
+.editor-contenteditable:focus {
+  border-color: var(--leaf-green) !important;
+  background: rgba(122, 158, 109, 0.02) !important;
+}
+
+

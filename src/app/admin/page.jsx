@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { LeafSVG } from '@/assets/svg/Icons';
@@ -8,6 +8,7 @@ import './admin.css';
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const editorRef = useRef(null);
   const [blogs, setBlogs] = useState([]);
   const [messages, setMessages] = useState([]);
   const [testimonials, setTestimonials] = useState([]);
@@ -33,25 +34,77 @@ export default function AdminDashboard() {
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
 
-  // Rich text editor insert helper
-  const insertTag = (startTag, endTag = '') => {
-    const textarea = document.getElementById('blog-content-textarea');
-    if (!textarea) return;
+  // Sync editor content editable value only when activeTab or blog ID changes (prevents cursor jumping)
+  useEffect(() => {
+    if (activeTab === 'edit-blog' && editorRef.current) {
+      if (editorRef.current.innerHTML !== blogForm.content) {
+        editorRef.current.innerHTML = blogForm.content || '';
+      }
+    }
+  }, [activeTab, blogForm.id]);
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const text = textarea.value;
-    const selected = text.substring(start, end);
-    const replacement = startTag + selected + endTag;
+  // Client-side image compression and Base64 conversion
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    const newValue = text.substring(0, start) + replacement + text.substring(end);
-    setBlogForm({ ...blogForm, content: newValue });
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800; // Resize large images to optimized maximum width
+        let width = img.width;
+        let height = img.height;
 
-    // Focus back and select inserted text
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(start + startTag.length, start + startTag.length + selected.length);
-    }, 10);
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Compress as JPEG at 0.7 quality to output a lightweight Base64 string
+        const base64 = canvas.toDataURL('image/jpeg', 0.7);
+        setBlogForm({ ...blogForm, image: base64 });
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Rich Text command executors
+  const formatDoc = (cmd, value = null) => {
+    document.execCommand(cmd, false, value);
+    if (editorRef.current) {
+      setBlogForm(prev => ({ ...prev, content: editorRef.current.innerHTML }));
+    }
+  };
+
+  const insertHTML = (html) => {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+    
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    
+    const fragment = document.createDocumentFragment();
+    let node;
+    while ((node = div.firstChild)) {
+      fragment.appendChild(node);
+    }
+    
+    range.insertNode(fragment);
+    
+    if (editorRef.current) {
+      setBlogForm(prev => ({ ...prev, content: editorRef.current.innerHTML }));
+    }
   };
 
   // Fetch all CMS data
@@ -291,6 +344,9 @@ export default function AdminDashboard() {
     setIsEditingTestimonial(false);
     setIsEditingMilestone(false);
     setFormError('');
+    if (editorRef.current) {
+      editorRef.current.innerHTML = '';
+    }
   };
 
   const handleTabChange = (tab) => {
@@ -466,14 +522,42 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
+              {/* Cover Image Upload Layout */}
               <div className="form-group">
-                <label>Cover Image URL (e.g. /images/sec-image.png)</label>
-                <input
-                  type="text"
-                  value={blogForm.image}
-                  onChange={(e) => setBlogForm({ ...blogForm, image: e.target.value })}
-                  placeholder="e.g. /images/sec-image.png or external link"
-                />
+                <label>Cover Image</label>
+                <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  {blogForm.image && (
+                    <img 
+                      src={blogForm.image} 
+                      alt="Preview" 
+                      style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.08)' }} 
+                    />
+                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, minWidth: '220px' }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      style={{ display: 'none' }}
+                      id="blog-image-upload-input"
+                    />
+                    <label 
+                      htmlFor="blog-image-upload-input" 
+                      className="btn btn--outline" 
+                      style={{ display: 'inline-block', textAlign: 'center', cursor: 'pointer', margin: 0, padding: '10px 18px', fontSize: '0.85rem' }}
+                    >
+                      📸 Select & Upload Image
+                    </label>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--tan)' }}>Or manually type/paste an image URL:</span>
+                    <input
+                      type="text"
+                      value={blogForm.image}
+                      onChange={(e) => setBlogForm({ ...blogForm, image: e.target.value })}
+                      placeholder="e.g. /images/sec-image.png or external link"
+                      style={{ padding: '8px 12px', fontSize: '0.85rem' }}
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="form-group">
@@ -492,40 +576,72 @@ export default function AdminDashboard() {
                 
                 {/* Rich text formatting toolbar */}
                 <div className="editor-toolbar">
-                  <button type="button" onClick={() => insertTag('<strong>', '</strong>')} className="toolbar-btn" title="Bold"><b>B</b></button>
-                  <button type="button" onClick={() => insertTag('<em>', '</em>')} className="toolbar-btn" title="Italic"><i>I</i></button>
-                  <button type="button" onClick={() => insertTag('<h2>', '</h2>')} className="toolbar-btn" title="Heading 2">H2</button>
-                  <button type="button" onClick={() => insertTag('<h3>', '</h3>')} className="toolbar-btn" title="Heading 3">H3</button>
-                  <button type="button" onClick={() => insertTag('<p>', '</p>')} className="toolbar-btn" title="Paragraph">Paragraph</button>
-                  <button type="button" onClick={() => insertTag('<br />')} className="toolbar-btn" title="Line Break">Line Break</button>
+                  <button type="button" onClick={() => formatDoc('bold')} className="toolbar-btn" title="Bold"><b>B</b></button>
+                  <button type="button" onClick={() => formatDoc('italic')} className="toolbar-btn" title="Italic"><i>I</i></button>
+                  <button type="button" onClick={() => formatDoc('formatBlock', '<h2>')} className="toolbar-btn" title="Heading 2">H2</button>
+                  <button type="button" onClick={() => formatDoc('formatBlock', '<h3>')} className="toolbar-btn" title="Heading 3">H3</button>
+                  <button type="button" onClick={() => formatDoc('formatBlock', '<p>')} className="toolbar-btn" title="Paragraph">Paragraph</button>
+                  <button type="button" onClick={() => formatDoc('insertHorizontalRule')} className="toolbar-btn" title="Line Break">Divider</button>
                   
                   <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }} />
                   
-                  <button type="button" onClick={() => insertTag('<span style="font-size: 1.25rem;">', '</span>')} className="toolbar-btn" title="Large Text">Large Text</button>
-                  <button type="button" onClick={() => insertTag('<span style="font-size: 1.5rem;">', '</span>')} className="toolbar-btn" title="XL Text">XL Text</button>
-                  <button type="button" onClick={() => insertTag('<blockquote style="font-size: 1.25rem; font-style: italic; color: var(--leaf-green); border-left: 3px solid var(--leaf-green); padding-left: 15px; margin: 15px 0;">', '</blockquote>')} className="toolbar-btn" title="Highlight Quote">Quote Highlight</button>
+                  <button type="button" onClick={() => {
+                    const sel = window.getSelection().toString();
+                    insertHTML(`<span style="font-size: 1.25rem;">${sel || 'Large Text'}</span>`);
+                  }} className="toolbar-btn" title="Large Text">Large Text</button>
+                  
+                  <button type="button" onClick={() => {
+                    const sel = window.getSelection().toString();
+                    insertHTML(`<span style="font-size: 1.5rem;">${sel || 'XL Text'}</span>`);
+                  }} className="toolbar-btn" title="XL Text">XL Text</button>
+                  
+                  <button type="button" onClick={() => {
+                    const sel = window.getSelection().toString();
+                    insertHTML(`<blockquote style="font-size: 1.25rem; font-style: italic; color: var(--leaf-green); border-left: 3px solid var(--leaf-green); padding-left: 15px; margin: 15px 0;">${sel || 'Quote highlight...'}</blockquote>`);
+                  }} className="toolbar-btn" title="Highlight Quote">Quote Highlight</button>
                   
                   <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }} />
 
                   <button type="button" onClick={() => {
                     const url = prompt('Enter link URL (e.g., https://example.com):');
-                    if (url) insertTag(`<a href="${url}" target="_blank" style="color: var(--leaf-green); text-decoration: underline;">`, '</a>');
+                    if (url) {
+                      const sel = window.getSelection().toString();
+                      insertHTML(`<a href="${url}" target="_blank" style="color: var(--leaf-green); text-decoration: underline;">${sel || url}</a>`);
+                    }
                   }} className="toolbar-btn" title="Insert Link">Link</button>
                   
                   <button type="button" onClick={() => {
                     const src = prompt('Enter image URL (e.g., /images/pasta-shot.png):');
-                    if (src) insertTag(`<img src="${src}" alt="" style="max-width: 100%; border-radius: var(--radius-lg); margin: 20px 0; border: 1px solid rgba(255,255,255,0.1);" />`);
+                    if (src) insertHTML(`<img src="${src}" alt="" style="max-width: 100%; border-radius: var(--radius-lg); margin: 20px 0; border: 1px solid rgba(255,255,255,0.1);" />`);
                   }} className="toolbar-btn" title="Insert Image">Image</button>
                 </div>
 
-                <textarea
+                {/* ContentEditable Rich Text Editor (Preserves Copy/Paste format naturally) */}
+                <div
                   id="blog-content-textarea"
-                  required
-                  rows={14}
-                  value={blogForm.content}
-                  onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
-                  placeholder="Write the blog contents here... (You can use the formatting toolbar above or write HTML/plain text)"
-                  className="editor-textarea"
+                  ref={editorRef}
+                  contentEditable="true"
+                  onInput={(e) => {
+                    setBlogForm(prev => ({ ...prev, content: e.currentTarget.innerHTML }));
+                  }}
+                  onBlur={(e) => {
+                    setBlogForm(prev => ({ ...prev, content: e.currentTarget.innerHTML }));
+                  }}
+                  className="editor-textarea editor-contenteditable"
+                  style={{
+                    minHeight: '280px',
+                    maxHeight: '550px',
+                    overflowY: 'auto',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    padding: '16px',
+                    color: 'var(--cream)',
+                    fontSize: '0.95rem',
+                    lineHeight: '1.6',
+                    outline: 'none',
+                    borderBottomLeftRadius: 'var(--radius-md)',
+                    borderBottomRightRadius: 'var(--radius-md)'
+                  }}
                 />
 
                 {/* Real-time HTML Preview */}
