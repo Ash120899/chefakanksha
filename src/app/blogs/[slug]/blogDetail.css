@@ -84,6 +84,7 @@
   font-size: var(--text-base);
   line-height: 1.8;
   color: var(--dark-brown);
+  max-width: 100%;
   margin: 0 auto;
 }
 
