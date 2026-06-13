@@ -91,6 +91,7 @@
 .blog-detail-content p {
   margin-bottom: 0px;
   color: var(--dark-brown);
+  font-size: 1.15rem;
 }
 
 .blog-detail-content p:first-of-type {
