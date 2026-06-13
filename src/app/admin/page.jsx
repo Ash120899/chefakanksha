@@ -622,10 +622,12 @@ export default function AdminDashboard() {
                   ref={editorRef}
                   contentEditable="true"
                   onInput={(e) => {
-                    setBlogForm(prev => ({ ...prev, content: e.currentTarget.innerHTML }));
+                    const html = e.currentTarget.innerHTML;
+                    setBlogForm(prev => ({ ...prev, content: html }));
                   }}
                   onBlur={(e) => {
-                    setBlogForm(prev => ({ ...prev, content: e.currentTarget.innerHTML }));
+                    const html = e.currentTarget.innerHTML;
+                    setBlogForm(prev => ({ ...prev, content: html }));
                   }}
                   className="editor-textarea editor-contenteditable"
                   style={{
