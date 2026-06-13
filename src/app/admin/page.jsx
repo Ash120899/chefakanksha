@@ -33,6 +33,27 @@ export default function AdminDashboard() {
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
 
+  // Rich text editor insert helper
+  const insertTag = (startTag, endTag = '') => {
+    const textarea = document.getElementById('blog-content-textarea');
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const selected = text.substring(start, end);
+    const replacement = startTag + selected + endTag;
+
+    const newValue = text.substring(0, start) + replacement + text.substring(end);
+    setBlogForm({ ...blogForm, content: newValue });
+
+    // Focus back and select inserted text
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + startTag.length, start + startTag.length + selected.length);
+    }, 10);
+  };
+
   // Fetch all CMS data
   const fetchData = async () => {
     try {
@@ -468,13 +489,67 @@ export default function AdminDashboard() {
 
               <div className="form-group">
                 <label>Article Content</label>
+                
+                {/* Rich text formatting toolbar */}
+                <div className="editor-toolbar">
+                  <button type="button" onClick={() => insertTag('<strong>', '</strong>')} className="toolbar-btn" title="Bold"><b>B</b></button>
+                  <button type="button" onClick={() => insertTag('<em>', '</em>')} className="toolbar-btn" title="Italic"><i>I</i></button>
+                  <button type="button" onClick={() => insertTag('<h2>', '</h2>')} className="toolbar-btn" title="Heading 2">H2</button>
+                  <button type="button" onClick={() => insertTag('<h3>', '</h3>')} className="toolbar-btn" title="Heading 3">H3</button>
+                  <button type="button" onClick={() => insertTag('<p>', '</p>')} className="toolbar-btn" title="Paragraph">Paragraph</button>
+                  <button type="button" onClick={() => insertTag('<br />')} className="toolbar-btn" title="Line Break">Line Break</button>
+                  
+                  <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }} />
+                  
+                  <button type="button" onClick={() => insertTag('<span style="font-size: 1.25rem;">', '</span>')} className="toolbar-btn" title="Large Text">Large Text</button>
+                  <button type="button" onClick={() => insertTag('<span style="font-size: 1.5rem;">', '</span>')} className="toolbar-btn" title="XL Text">XL Text</button>
+                  <button type="button" onClick={() => insertTag('<blockquote style="font-size: 1.25rem; font-style: italic; color: var(--leaf-green); border-left: 3px solid var(--leaf-green); padding-left: 15px; margin: 15px 0;">', '</blockquote>')} className="toolbar-btn" title="Highlight Quote">Quote Highlight</button>
+                  
+                  <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }} />
+
+                  <button type="button" onClick={() => {
+                    const url = prompt('Enter link URL (e.g., https://example.com):');
+                    if (url) insertTag(`<a href="${url}" target="_blank" style="color: var(--leaf-green); text-decoration: underline;">`, '</a>');
+                  }} className="toolbar-btn" title="Insert Link">Link</button>
+                  
+                  <button type="button" onClick={() => {
+                    const src = prompt('Enter image URL (e.g., /images/pasta-shot.png):');
+                    if (src) insertTag(`<img src="${src}" alt="" style="max-width: 100%; border-radius: var(--radius-lg); margin: 20px 0; border: 1px solid rgba(255,255,255,0.1);" />`);
+                  }} className="toolbar-btn" title="Insert Image">Image</button>
+                </div>
+
                 <textarea
+                  id="blog-content-textarea"
                   required
                   rows={14}
                   value={blogForm.content}
                   onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
-                  placeholder="Write the blog contents here... (markdown or plain text)"
+                  placeholder="Write the blog contents here... (You can use the formatting toolbar above or write HTML/plain text)"
+                  className="editor-textarea"
                 />
+
+                {/* Real-time HTML Preview */}
+                {blogForm.content && (
+                  <div className="editor-preview">
+                    <div className="editor-preview-title">Real-time Article Preview</div>
+                    <div 
+                      className="editor-preview-content"
+                      dangerouslySetInnerHTML={{ 
+                        __html: (() => {
+                          const content = blogForm.content;
+                          if (!content) return '';
+                          if (!/<[a-z][\s\S]*>/i.test(content)) {
+                            return content
+                              .split('\n\n')
+                              .map((p) => `<p>${p.trim().replace(/\n/g, '<br />')}</p>`)
+                              .join('');
+                          }
+                          return content;
+                        })()
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="form-actions">

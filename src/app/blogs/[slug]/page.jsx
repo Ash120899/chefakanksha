@@ -6,6 +6,9 @@ import CustomCursor from '@/components/CustomCursor/CustomCursor';
 import Link from 'next/link';
 import './blogDetail.css';
 
+// Force dynamic page rendering on every request to bypass caching
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const db = await readDB();
@@ -23,6 +26,20 @@ export async function generateMetadata({ params }) {
   };
 }
 
+// Helper to handle HTML vs plain text formatting
+function formatContent(content) {
+  if (!content) return '';
+  // Check if content contains any HTML tags
+  if (!/<[a-z][\s\S]*>/i.test(content)) {
+    // Convert double newlines to paragraphs and single newlines to line breaks
+    return content
+      .split('\n\n')
+      .map((p) => `<p>${p.trim().replace(/\n/g, '<br />')}</p>`)
+      .join('');
+  }
+  return content;
+}
+
 export default async function BlogPostPage({ params }) {
   const { slug } = await params;
   const db = await readDB();
@@ -31,9 +48,6 @@ export default async function BlogPostPage({ params }) {
   if (!post) {
     notFound();
   }
-
-  // Split content by newline to render separate paragraphs
-  const paragraphs = post.content.split('\n\n');
 
   return (
     <div className="blog-detail-root">
@@ -74,30 +88,14 @@ export default async function BlogPostPage({ params }) {
           </div>
 
           {/* Article Content */}
-          <article className="blog-detail-content">
-            {paragraphs.map((para, i) => {
-              if (para.trim()) {
-                return <p key={i}>{para}</p>;
-              }
-              return null;
-            })}
-          </article>
+          <article 
+            className="blog-detail-content"
+            dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
+          />
         </div>
       </main>
 
       <Footer />
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  try {
-    const db = await readDB();
-    return (db.blogs || []).map((post) => ({
-      slug: post.slug,
-    }));
-  } catch (err) {
-    console.error('generateStaticParams error:', err);
-    return [];
-  }
 }
