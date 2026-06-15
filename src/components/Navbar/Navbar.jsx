@@ -50,7 +50,7 @@ export default function Navbar() {
   const handleNavClick = (e, href) => {
     e.preventDefault();
     setMobileOpen(false);
-    
+
     if (pathname !== '/') {
       router.push('/' + href);
     } else {
@@ -77,8 +77,7 @@ export default function Navbar() {
       <div className="navbar__inner container">
         {/* Logo */}
         <a href="#hero" className="navbar__logo" onClick={(e) => handleNavClick(e, '#hero')}>
-          <span className="navbar__logo-text">Chef Akanksha</span>
-          <LeafSVG size={18} color="var(--olive-green)" />
+          <img src="/images/logo.png" alt="logo" />
         </a>
 
         {/* Desktop Nav Links */}
