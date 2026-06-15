@@ -43,12 +43,36 @@ export async function readDB() {
     if (collection) {
       const doc = await collection.findOne({ _id: 'db_root' });
       if (doc) {
-        return {
-          blogs: doc.blogs || [],
-          messages: doc.messages || [],
-          testimonials: doc.testimonials || siteContent.testimonials.reviews,
-          milestones: doc.milestones || siteContent.milestones.items
-        };
+        let blogs = doc.blogs || [];
+        let messages = doc.messages || [];
+        let testimonials = doc.testimonials || siteContent.testimonials.reviews;
+        let milestones = doc.milestones || siteContent.milestones.items;
+
+        let changed = false;
+        testimonials = testimonials.map((t, idx) => {
+          if (!t.id) {
+            changed = true;
+            return { id: `t-${idx + 1}`, ...t };
+          }
+          return t;
+        });
+
+        milestones = milestones.map((m, idx) => {
+          if (!m.id) {
+            changed = true;
+            return { id: `m-${idx + 1}`, ...m };
+          }
+          return m;
+        });
+
+        if (changed) {
+          await collection.updateOne(
+            { _id: 'db_root' },
+            { $set: { testimonials, milestones } }
+          );
+        }
+
+        return { blogs, messages, testimonials, milestones };
       }
       // Auto-initialize MongoDB with local JSON data if collection is empty
       const localData = await readLocalDB();
@@ -65,12 +89,33 @@ async function readLocalDB() {
   try {
     const data = await fs.readFile(DB_PATH, 'utf-8');
     const parsed = JSON.parse(data);
-    return {
-      blogs: parsed.blogs || [],
-      messages: parsed.messages || [],
-      testimonials: parsed.testimonials || siteContent.testimonials.reviews,
-      milestones: parsed.milestones || siteContent.milestones.items
-    };
+    let blogs = parsed.blogs || [];
+    let messages = parsed.messages || [];
+    let testimonials = parsed.testimonials || siteContent.testimonials.reviews;
+    let milestones = parsed.milestones || siteContent.milestones.items;
+
+    let changed = false;
+    testimonials = testimonials.map((t, idx) => {
+      if (!t.id) {
+        changed = true;
+        return { id: `t-${idx + 1}`, ...t };
+      }
+      return t;
+    });
+
+    milestones = milestones.map((m, idx) => {
+      if (!m.id) {
+        changed = true;
+        return { id: `m-${idx + 1}`, ...m };
+      }
+      return m;
+    });
+
+    const fullData = { blogs, messages, testimonials, milestones };
+    if (changed) {
+      await writeLocalDB(fullData);
+    }
+    return fullData;
   } catch (error) {
     // Return empty default structure if file not found or corrupted
     return {
