@@ -2,6 +2,16 @@ import { NextResponse } from 'next/server';
 import { readDB, writeDB } from '@/lib/db';
 import { isAuthenticated } from '@/lib/auth';
 
+// Helper to make a slug from a title
+function makeSlug(title) {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 export async function PUT(request, { params }) {
   try {
     if (!(await isAuthenticated())) {
@@ -18,14 +28,29 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ success: false, error: 'Blog not found' }, { status: 404 });
     }
 
+    const originalBlog = db.blogs[blogIndex];
+
+    // Generate unique slug if title has changed
+    let slug = originalBlog.slug;
+    if (title && title !== originalBlog.title) {
+      const baseSlug = makeSlug(title) || 'blog-post';
+      slug = baseSlug;
+      let counter = 1;
+      while (db.blogs.some((b) => b.id !== id && b.slug === slug)) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      }
+    }
+
     // Update fields
     const updatedBlog = {
-      ...db.blogs[blogIndex],
-      title: title || db.blogs[blogIndex].title,
-      excerpt: excerpt || db.blogs[blogIndex].excerpt,
-      content: content || db.blogs[blogIndex].content,
-      image: image || db.blogs[blogIndex].image,
-      category: category || db.blogs[blogIndex].category,
+      ...originalBlog,
+      slug,
+      title: title || originalBlog.title,
+      excerpt: excerpt || originalBlog.excerpt,
+      content: content || originalBlog.content,
+      image: image || originalBlog.image,
+      category: category || originalBlog.category,
     };
 
     db.blogs[blogIndex] = updatedBlog;

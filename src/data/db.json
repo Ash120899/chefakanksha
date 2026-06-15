@@ -2,10 +2,10 @@
   "blogs": [
     {
       "id": "1",
-      "slug": "day-i-almost-left-culinary-industry",
-      "title": "The Day I Almost Left The Culinary Industry",
+      "slug": "finding-my-place-in-the-kitchen",
+      "title": "Finding My Place in the Kitchen",
       "date": "June 2, 2026",
-      "excerpt": "Reflections on navigating professional kitchens as a vegetarian, questioning my path, and finding my true purpose in plant-based innovation.",
+      "excerpt": "From childhood memories around food to discovering my purpose as a plant-based Italian chef.",
       "content": "Entering the culinary industry as someone who had never eaten meat came with a question I carried every day: \"Is there a place for a chef like me here?\"\n\nDuring my early training years, my biggest challenge was navigating professional kitchens while staying connected to my values. I watched traditional techniques rely heavily on animal products, and there was a prevailing attitude that fine dining had to look a certain way.\n\nThere was a specific evening, during a grueling service, where I felt entirely disconnected from my purpose. I almost hung up my chef coat for good. But instead of leaving, I chose to change direction.\n\nI realized my vegetarianism and compassion weren't limitations. They were my speciality. Leaving behind dairy, cheese, and traditional animal ingredients challenged me to understand food at a deeper level. I began exploring how to replicate the chemistry of classic Italian dishes using organic plant alternatives.\n\nToday, I look back on that day of doubt as the catalyst for everything I build. The future of food belongs to innovation and compassion.",
       "image": "/images/sec-image.png",
       "category": "My Journey"
@@ -39,6 +39,55 @@
       "subject": "Just saying hello",
       "message": "HEllo",
       "date": "June 5, 2026 at 04:10 PM"
+    }
+  ],
+  "testimonials": [
+    {
+      "rating": 5,
+      "text": "Chef Akanksha redefined what we believed was possible with plant-based cuisine. Her attention to Italian traditions while introducing pure, cruelty-free ingredients left our guests in absolute awe.",
+      "avatar": "🇮🇹",
+      "author": "Chef Alessandro Rossi",
+      "role": "Culinary Director, Milan"
+    },
+    {
+      "rating": 5,
+      "text": "The training sessions she conducted for our university faculty were exceptional. Her deep understanding of vegan ingredients and structured cooking techniques inspired our entire department.",
+      "avatar": "🎓",
+      "author": "Dr. Meera Sharma",
+      "role": "Head of Culinary Arts, Chandigarh University"
+    },
+    {
+      "rating": 5,
+      "text": "Akanksha's private dining experience was a masterclass in taste and compassion. Every course was beautifully presented, telling a story of handmade craftsmanship and plant-based innovation.",
+      "avatar": "🍽️",
+      "author": "Rohan Mehta",
+      "role": "Founder, GreenFoods India"
+    }
+  ],
+  "milestones": [
+    {
+      "org": "Chandigarh University",
+      "title": "Faculty Vegan Culinary Workshop",
+      "description": "Trained hotel management and culinary faculty in plant-based cooking techniques, vegan ingredients, and menu development.",
+      "type": "training"
+    },
+    {
+      "org": "Humane World For Animals Event",
+      "title": "Guest Chef Experience",
+      "description": "Invited as a guest chef for a plant-based culinary event organized by Humane World for Animals, showcasing practical applications of compassionate and sustainable cuisine.",
+      "type": "event"
+    },
+    {
+      "org": "Magnolia, Gurugram",
+      "title": "Plant-Based Training",
+      "description": "Introduced teams to vegan cooking approaches, ingredient understanding and recipe adaptation.",
+      "type": "training"
+    },
+    {
+      "org": "Vegan Piatto",
+      "title": "Founder",
+      "description": "Building my own vision for the future of plant-based dining.",
+      "type": "venture"
     }
   ]
 }

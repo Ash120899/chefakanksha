@@ -94,20 +94,16 @@
   font-size: 1.15rem;
 }
 
-.blog-detail-content p:first-of-type {
-  font-size: 1.15rem;
-  color: var(--dark-brown);
-  line-height: 1.7;
+
+blockquote {
+  font-family: var(--font-handwritten);
+  font-size: var(--text-2xl) !important;
+  color: var(--olive-green) !important;
+  margin-top: var(--space-xs) !important;
   font-weight: 500;
 }
 
-article.blog-detail-content h2 span {
-  font-family: var(--font-handwritten);
-  font-size: var(--text-2xl);
-  color: var(--olive-green);
-  margin-top: var(--space-xs);
-  font-weight: 500;
-}
+
 
 @media (max-width: 640px) {
   .blog-detail-main {
