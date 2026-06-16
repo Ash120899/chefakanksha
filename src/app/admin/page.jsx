@@ -17,7 +17,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('blogs'); // blogs, edit-blog, testimonials, edit-testimonial, milestones, edit-milestone, messages
 
   // Blog form states
-  const [blogForm, setBlogForm] = useState({ id: '', title: '', excerpt: '', content: '', image: '', category: 'My Journey' });
+  const [blogForm, setBlogForm] = useState({ id: '', title: '', excerpt: '', content: '', image: '', category: 'Culinary Philosophy' });
   const [blogLoading, setBlogLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -90,18 +90,18 @@ export default function AdminDashboard() {
     if (!selection.rangeCount) return;
     const range = selection.getRangeAt(0);
     range.deleteContents();
-    
+
     const div = document.createElement('div');
     div.innerHTML = html;
-    
+
     const fragment = document.createDocumentFragment();
     let node;
     while ((node = div.firstChild)) {
       fragment.appendChild(node);
     }
-    
+
     range.insertNode(fragment);
-    
+
     if (editorRef.current) {
       setBlogForm(prev => ({ ...prev, content: editorRef.current.innerHTML }));
     }
@@ -337,7 +337,7 @@ export default function AdminDashboard() {
   // COMMON HELPERS
   // -------------------------
   const resetForm = () => {
-    setBlogForm({ id: '', title: '', excerpt: '', content: '', image: '', category: 'My Journey' });
+    setBlogForm({ id: '', title: '', excerpt: '', content: '', image: '', category: 'Culinary Philosophy' });
     setTestimonialForm({ id: '', rating: 5, text: '', avatar: '🌿', author: '', role: '' });
     setMilestoneForm({ id: '', org: '', title: '', description: '', type: 'training' });
     setIsEditing(false);
@@ -368,65 +368,65 @@ export default function AdminDashboard() {
   return (
     <div className="admin-container">
       <div className="grain-overlay" />
-      
+
       {/* Sidebar Nav */}
       <aside className="admin-sidebar">
         <div className="admin-brand">
           <LeafSVG size={28} color="var(--leaf-green)" />
           <span>Chef CMS</span>
         </div>
-        
+
         <nav className="admin-nav">
-          <button 
+          <button
             onClick={() => handleTabChange('blogs')}
             className={`admin-nav-item ${activeTab === 'blogs' ? 'active' : ''}`}
           >
             Manage Blogs
           </button>
-          
-          <button 
+
+          <button
             onClick={() => handleTabChange('edit-blog')}
             className={`admin-nav-item ${activeTab === 'edit-blog' ? 'active' : ''}`}
           >
             {isEditing ? 'Edit Post ✍️' : 'Add New Post ➕'}
           </button>
-          
-          <button 
+
+          <button
             onClick={() => handleTabChange('testimonials')}
             className={`admin-nav-item ${activeTab === 'testimonials' ? 'active' : ''}`}
           >
             Manage Testimonials
           </button>
 
-          <button 
+          <button
             onClick={() => handleTabChange('edit-testimonial')}
             className={`admin-nav-item ${activeTab === 'edit-testimonial' ? 'active' : ''}`}
           >
             {isEditingTestimonial ? 'Edit Testimonial ✍️' : 'Add Testimonial ➕'}
           </button>
 
-          <button 
+          <button
             onClick={() => handleTabChange('milestones')}
             className={`admin-nav-item ${activeTab === 'milestones' ? 'active' : ''}`}
           >
             Manage Journey (Timeline)
           </button>
 
-          <button 
+          <button
             onClick={() => handleTabChange('edit-milestone')}
             className={`admin-nav-item ${activeTab === 'edit-milestone' ? 'active' : ''}`}
           >
             {isEditingMilestone ? 'Edit Milestone ✍️' : 'Add Milestone ➕'}
           </button>
 
-          <button 
+          <button
             onClick={() => handleTabChange('messages')}
             className={`admin-nav-item ${activeTab === 'messages' ? 'active' : ''}`}
           >
             Inquiries Inbox ({messages.length})
           </button>
         </nav>
-        
+
         <div className="admin-sidebar-footer">
           <Link href="/" className="admin-home-link">← Website Home</Link>
           <button onClick={handleLogout} className="admin-logout-btn">Logout 🔒</button>
@@ -507,17 +507,18 @@ export default function AdminDashboard() {
                     placeholder="Enter article title..."
                   />
                 </div>
-                
+
                 <div className="form-group" style={{ width: '220px' }}>
                   <label>Category</label>
                   <select
                     value={blogForm.category}
                     onChange={(e) => setBlogForm({ ...blogForm, category: e.target.value })}
                   >
-                    <option value="My Journey">My Journey</option>
+                    <option value="Culinary Philosophy">Culinary Philosophy</option>
                     <option value="Culinary Innovation">Culinary Innovation</option>
-                    <option value="Italian Craft">Italian Craft</option>
-                    <option value="Kitchen Journal">Kitchen Journal</option>
+                    <option value="Building Change">Building Change</option>
+                    <option value="Beyond the Kitchen">Beyond the Kitchen</option>
+                    <option value="Community and Change">Community and Change</option>
                   </select>
                 </div>
               </div>
@@ -527,10 +528,10 @@ export default function AdminDashboard() {
                 <label>Cover Image</label>
                 <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
                   {blogForm.image && (
-                    <img 
-                      src={blogForm.image} 
-                      alt="Preview" 
-                      style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.08)' }} 
+                    <img
+                      src={blogForm.image}
+                      alt="Preview"
+                      style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.08)' }}
                     />
                   )}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, minWidth: '220px' }}>
@@ -541,9 +542,9 @@ export default function AdminDashboard() {
                       style={{ display: 'none' }}
                       id="blog-image-upload-input"
                     />
-                    <label 
-                      htmlFor="blog-image-upload-input" 
-                      className="btn btn--outline" 
+                    <label
+                      htmlFor="blog-image-upload-input"
+                      className="btn btn--outline"
                       style={{ display: 'inline-block', textAlign: 'center', cursor: 'pointer', margin: 0, padding: '10px 18px', fontSize: '0.85rem' }}
                     >
                       📸 Select & Upload Image
@@ -573,7 +574,7 @@ export default function AdminDashboard() {
 
               <div className="form-group">
                 <label>Article Content</label>
-                
+
                 {/* Rich text formatting toolbar */}
                 <div className="editor-toolbar">
                   <button type="button" onClick={() => formatDoc('bold')} className="toolbar-btn" title="Bold"><b>B</b></button>
@@ -582,24 +583,24 @@ export default function AdminDashboard() {
                   <button type="button" onClick={() => formatDoc('formatBlock', '<h3>')} className="toolbar-btn" title="Heading 3">H3</button>
                   <button type="button" onClick={() => formatDoc('formatBlock', '<p>')} className="toolbar-btn" title="Paragraph">Paragraph</button>
                   <button type="button" onClick={() => formatDoc('insertHorizontalRule')} className="toolbar-btn" title="Line Break">Divider</button>
-                  
+
                   <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }} />
-                  
+
                   <button type="button" onClick={() => {
                     const sel = window.getSelection().toString();
                     insertHTML(`<span style="font-size: 1.25rem;">${sel || 'Large Text'}</span>`);
                   }} className="toolbar-btn" title="Large Text">Large Text</button>
-                  
+
                   <button type="button" onClick={() => {
                     const sel = window.getSelection().toString();
                     insertHTML(`<span style="font-size: 1.5rem;">${sel || 'XL Text'}</span>`);
                   }} className="toolbar-btn" title="XL Text">XL Text</button>
-                  
+
                   <button type="button" onClick={() => {
                     const sel = window.getSelection().toString();
                     insertHTML(`<blockquote style="font-size: 1.25rem; font-style: italic; color: var(--leaf-green); border-left: 3px solid var(--leaf-green); padding-left: 15px; margin: 15px 0;">${sel || 'Quote highlight...'}</blockquote>`);
                   }} className="toolbar-btn" title="Highlight Quote">Quote Highlight</button>
-                  
+
                   <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }} />
 
                   <button type="button" onClick={() => {
@@ -609,7 +610,7 @@ export default function AdminDashboard() {
                       insertHTML(`<a href="${url}" target="_blank" style="color: var(--leaf-green); text-decoration: underline;">${sel || url}</a>`);
                     }
                   }} className="toolbar-btn" title="Insert Link">Link</button>
-                  
+
                   <button type="button" onClick={() => {
                     const src = prompt('Enter image URL (e.g., /images/pasta-shot.png):');
                     if (src) insertHTML(`<img src="${src}" alt="" style="max-width: 100%; border-radius: var(--radius-lg); margin: 20px 0; border: 1px solid rgba(255,255,255,0.1);" />`);
@@ -650,9 +651,9 @@ export default function AdminDashboard() {
                 {blogForm.content && (
                   <div className="editor-preview">
                     <div className="editor-preview-title">Real-time Article Preview</div>
-                    <div 
+                    <div
                       className="editor-preview-content"
-                      dangerouslySetInnerHTML={{ 
+                      dangerouslySetInnerHTML={{
                         __html: (() => {
                           const content = blogForm.content;
                           if (!content) return '';
@@ -737,7 +738,7 @@ export default function AdminDashboard() {
                     placeholder="e.g. Dr. Meera Sharma"
                   />
                 </div>
-                
+
                 <div className="form-group" style={{ width: '150px' }}>
                   <label>Rating (Stars)</label>
                   <select
@@ -851,7 +852,7 @@ export default function AdminDashboard() {
                     placeholder="e.g. Chandigarh University"
                   />
                 </div>
-                
+
                 <div className="form-group" style={{ width: '220px' }}>
                   <label>Milestone Type</label>
                   <select
