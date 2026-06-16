@@ -519,6 +519,8 @@ export default function AdminDashboard() {
                     <option value="Building Change">Building Change</option>
                     <option value="Beyond the Kitchen">Beyond the Kitchen</option>
                     <option value="Community and Change">Community and Change</option>
+                    <option value="My Journey">My Journey</option>
+
                   </select>
                 </div>
               </div>
