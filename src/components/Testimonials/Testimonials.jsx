@@ -16,6 +16,7 @@ export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [reviews, setReviews] = useState(siteContent.testimonials.reviews);
+  const [visibleCards, setVisibleCards] = useState(3);
   const { testimonials } = siteContent;
 
   useEffect(() => {
@@ -33,6 +34,31 @@ export default function Testimonials() {
     fetchTestimonials();
   }, []);
 
+  // Handle responsive columns
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setVisibleCards(1);
+      } else if (window.innerWidth < 1024) {
+        setVisibleCards(2);
+      } else {
+        setVisibleCards(3);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const maxIndex = Math.max(0, reviews.length - visibleCards);
+
+  // Keep activeIndex within bounds if visibleCards or reviews change
+  useEffect(() => {
+    if (activeIndex > maxIndex) {
+      setActiveIndex(maxIndex);
+    }
+  }, [maxIndex, activeIndex]);
+
   useGSAP(() => {
     gsap.fromTo('.test__header > *',
       { opacity: 0, y: 30 },
@@ -41,12 +67,12 @@ export default function Testimonials() {
   }, { scope: sectionRef });
 
   useEffect(() => {
-    if (isPaused || reviews.length === 0) return;
+    if (isPaused || reviews.length === 0 || maxIndex === 0) return;
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % reviews.length);
+      setActiveIndex((prev) => (prev + 1) % (maxIndex + 1));
     }, 5000);
     return () => clearInterval(interval);
-  }, [reviews.length, isPaused]);
+  }, [reviews.length, isPaused, maxIndex]);
 
   return (
     <section ref={sectionRef} className="test section section--alt" id="testimonials"
@@ -61,9 +87,19 @@ export default function Testimonials() {
           <h2>{testimonials.title}</h2>
         </div>
         <div className="test__carousel">
-          <div className="test__track" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+          <div 
+            className="test__track" 
+            style={{ 
+              transform: `translateX(-${activeIndex * (100 / visibleCards)}%)`,
+              width: `${(reviews.length / visibleCards) * 100}%`
+            }}
+          >
             {reviews.map((review, i) => (
-              <div key={i} className="test__slide">
+              <div 
+                key={i} 
+                className="test__slide"
+                style={{ width: `${100 / reviews.length}%` }}
+              >
                 <div className="test__card card">
                   <div className="test__stars">
                     {[...Array(review.rating)].map((_, j) => <StarSVG key={j} size={18} />)}
@@ -80,15 +116,18 @@ export default function Testimonials() {
               </div>
             ))}
           </div>
-          <div className="test__nav">
-            <button className="test__arrow" onClick={() => setActiveIndex((prev) => (prev - 1 + reviews.length) % reviews.length)}>←</button>
-            <div className="test__dots">
-              {reviews.map((_, i) => (
-                <button key={i} className={`test__dot ${i === activeIndex ? 'test__dot--active' : ''}`} onClick={() => setActiveIndex(i)} />
-              ))}
+
+          {maxIndex > 0 && (
+            <div className="test__nav">
+              <button className="test__arrow" onClick={() => setActiveIndex((prev) => Math.max(0, prev - 1))}>←</button>
+              <div className="test__dots">
+                {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+                  <button key={i} className={`test__dot ${i === activeIndex ? 'test__dot--active' : ''}`} onClick={() => setActiveIndex(i)} />
+                ))}
+              </div>
+              <button className="test__arrow" onClick={() => setActiveIndex((prev) => Math.min(maxIndex, prev + 1))}>→</button>
             </div>
-            <button className="test__arrow" onClick={() => setActiveIndex((prev) => (prev + 1) % reviews.length)}>→</button>
-          </div>
+          )}
         </div>
       </div>
       {[...Array(8)].map((_, i) => (
